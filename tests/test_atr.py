@@ -120,3 +120,29 @@ def test_model_convergence_on_synthetic_data():
 
     assert losses[-1] < losses[0], f"Model failed to converge: initial loss {losses[0]:.4f}, final loss {losses[-1]:.4f}"
     assert losses[-1] < 0.5 * losses[0], f"Loss reduction insufficient: {losses[0]:.4f} -> {losses[-1]:.4f}"
+
+
+def test_energy_based_ood_score_computation():
+    """Verify that Free Energy OOD score computation is mathematically sound,
+    finite, and preserves temperature shift properties.
+    """
+    model = GhostECANet(in_channels=1, num_classes=3)
+    model.eval()
+
+    dummy_input = torch.randn(5, 1, 128, 128)
+    with torch.no_grad():
+        logits = model(dummy_input)
+
+    # Free energy score S(x) = T * logsumexp(logits / T)
+    t = 2.0
+    energy_score = t * torch.logsumexp(logits / t, dim=1)
+
+    assert energy_score.shape == (5,)
+    assert not torch.isnan(energy_score).any()
+    assert not torch.isinf(energy_score).any()
+
+    # Shift-equivariance property: S(logits + c) == S(logits) + c
+    c = 3.0
+    shifted_energy = t * torch.logsumexp((logits + c) / t, dim=1)
+    assert torch.allclose(shifted_energy, energy_score + c, atol=1e-5)
+

@@ -1,0 +1,287 @@
+{
+  "timestamp": "2026-09-20 02:44:04",
+  "c1_class_weighting": {
+    "baseline": {
+      "name": "Baseline (Unweighted)",
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "accuracy": 63.7137989778535,
+      "macro_precision": 61.2059510252381,
+      "macro_recall": 63.65689865689866,
+      "macro_f1": 60.85714100476617,
+      "confusion_matrix": [
+        [
+          191,
+          5,
+          0
+        ],
+        [
+          46,
+          59,
+          90
+        ],
+        [
+          23,
+          49,
+          124
+        ]
+      ],
+      "class_metrics": {
+        "T-72": {
+          "precision": 73.46153846153847,
+          "recall": 97.44897959183673,
+          "f1": 83.77192982456141,
+          "support": 196
+        },
+        "BMP-2": {
+          "precision": 52.21238938053098,
+          "recall": 30.256410256410255,
+          "f1": 38.311688311688314,
+          "support": 195
+        },
+        "BTR-70": {
+          "precision": 57.943925233644855,
+          "recall": 63.26530612244898,
+          "f1": 60.48780487804878,
+          "support": 196
+        }
+      }
+    },
+    "weighted_trials": [
+      {
+        "weights": [
+          1.0,
+          2.0,
+          1.0
+        ],
+        "accuracy": 61.158432708688245,
+        "macro_precision": 43.024369436798814,
+        "macro_recall": 61.19919762776905,
+        "macro_f1": 50.05257088590421,
+        "confusion_matrix": [
+          [
+            193,
+            3,
+            0
+          ],
+          [
+            29,
+            166,
+            0
+          ],
+          [
+            14,
+            182,
+            0
+          ]
+        ],
+        "class_metrics": {
+          "T-72": {
+            "precision": 81.77966101694916,
+            "recall": 98.46938775510205,
+            "f1": 89.35185185185185,
+            "support": 196
+          },
+          "BMP-2": {
+            "precision": 47.293447293447294,
+            "recall": 85.12820512820512,
+            "f1": 60.8058608058608,
+            "support": 195
+          },
+          "BTR-70": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 196
+          }
+        },
+        "name": "Moderate BMP-2 Focus [1.0, 2.0, 1.0]",
+        "training_time_s": 144.81339955329895
+      },
+      {
+        "weights": [
+          1.0,
+          2.799999952316284,
+          1.2000000476837158
+        ],
+        "accuracy": 61.158432708688245,
+        "macro_precision": 44.29939949721464,
+        "macro_recall": 61.20704692133264,
+        "macro_f1": 50.45860529027825,
+        "confusion_matrix": [
+          [
+            184,
+            12,
+            0
+          ],
+          [
+            20,
+            175,
+            0
+          ],
+          [
+            10,
+            186,
+            0
+          ]
+        ],
+        "class_metrics": {
+          "T-72": {
+            "precision": 85.98130841121495,
+            "recall": 93.87755102040816,
+            "f1": 89.75609756097562,
+            "support": 196
+          },
+          "BMP-2": {
+            "precision": 46.91689008042895,
+            "recall": 89.74358974358975,
+            "f1": 61.61971830985915,
+            "support": 195
+          },
+          "BTR-70": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 196
+          }
+        },
+        "name": "Balanced Inverse-Difficulty [1.0, 2.8, 1.2]",
+        "training_time_s": 143.6576383113861
+      },
+      {
+        "weights": [
+          0.6000000238418579,
+          2.5,
+          1.0
+        ],
+        "accuracy": 59.45485519591141,
+        "macro_precision": 79.81014968966775,
+        "macro_recall": 59.51944880516309,
+        "macro_f1": 50.39771091750998,
+        "confusion_matrix": [
+          [
+            156,
+            40,
+            0
+          ],
+          [
+            5,
+            190,
+            0
+          ],
+          [
+            5,
+            188,
+            3
+          ]
+        ],
+        "class_metrics": {
+          "T-72": {
+            "precision": 93.97590361445783,
+            "recall": 79.59183673469387,
+            "f1": 86.1878453038674,
+            "support": 196
+          },
+          "BMP-2": {
+            "precision": 45.45454545454545,
+            "recall": 97.43589743589743,
+            "f1": 61.99021207177814,
+            "support": 195
+          },
+          "BTR-70": {
+            "precision": 100.0,
+            "recall": 1.530612244897959,
+            "f1": 3.015075376884422,
+            "support": 196
+          }
+        },
+        "name": "Aggressive BMP-2 Focus [0.6, 2.5, 1.0]",
+        "training_time_s": 141.40486884117126
+      }
+    ]
+  },
+  "c2_energy_ood": {
+    "auroc_msp": 0.46067405316125776,
+    "best_temperature": 5.0,
+    "best_energy_auroc": 0.6499532860137955,
+    "auroc_delta": 0.18927923285253778,
+    "energy_experiments_by_temp": {
+      "T=1.0": {
+        "auroc": 0.5632733528222106,
+        "known_mean": 1.3547178506851196,
+        "known_std": 0.20699630677700043,
+        "ood_mean": 1.3293064832687378,
+        "ood_std": 0.2561715543270111
+      },
+      "T=2.0": {
+        "auroc": 0.5941096814736408,
+        "known_mean": 2.322972297668457,
+        "known_std": 0.11873665452003479,
+        "ood_mean": 2.292937994003296,
+        "ood_std": 0.13063964247703552
+      },
+      "T=5.0": {
+        "auroc": 0.6499532860137955,
+        "known_mean": 5.524787425994873,
+        "known_std": 0.05647433176636696,
+        "ood_mean": 5.498310565948486,
+        "ood_std": 0.04389115050435066
+      }
+    },
+    "threshold_selection_methodology": "Threshold tau_X is determined statistically as the X-th percentile of the In-Distribution (known) test/validation score distribution, guaranteeing a pre-specified Known True Positive Rate (TPR). Specifically, tau_95 corresponds to the 5th percentile, guaranteeing 95.0% known target retention. No test labels or OOD distribution knowledge are used to tune the threshold, preventing empirical bias.",
+    "threshold_evaluation": [
+      {
+        "percentile": 5.0,
+        "target_tpr_pct": 95.0,
+        "threshold_tau": 5.457180023193359,
+        "actual_known_tpr_pct": 94.8892674616695,
+        "ood_false_positive_rate_pct": 85.03808487486398,
+        "ood_correct_rejection_pct": 14.961915125136017,
+        "detection_error_pct": 45.07440870659724
+      },
+      {
+        "percentile": 10.0,
+        "target_tpr_pct": 90.0,
+        "threshold_tau": 5.462001323699951,
+        "actual_known_tpr_pct": 89.9488926746167,
+        "ood_false_positive_rate_pct": 74.75516866158868,
+        "ood_correct_rejection_pct": 25.244831338411316,
+        "detection_error_pct": 42.40313799348599
+      },
+      {
+        "percentile": 20.0,
+        "target_tpr_pct": 80.0,
+        "threshold_tau": 5.474547863006592,
+        "actual_known_tpr_pct": 79.89778534923339,
+        "ood_false_positive_rate_pct": 59.140369967355824,
+        "ood_correct_rejection_pct": 40.859630032644176,
+        "detection_error_pct": 39.62129230906122
+      },
+      {
+        "percentile": 50.0,
+        "target_tpr_pct": 50.0,
+        "threshold_tau": 5.5118513107299805,
+        "actual_known_tpr_pct": 50.08517887563884,
+        "ood_false_positive_rate_pct": 31.936887921653973,
+        "ood_correct_rejection_pct": 68.06311207834604,
+        "detection_error_pct": 40.925854523007565
+      }
+    ]
+  },
+  "c3_sentinel_status": {
+    "status": "YAPILAMADI: ESA Copernicus / ASF hesap kimlik do\u011frulamas\u0131 (OAuth credentials) ve ~4-8 GB SLC dosya boyutu k\u0131s\u0131t\u0131",
+    "details": {
+      "source_repositories": [
+        "ESA Copernicus Data Space Ecosystem",
+        "Alaska Satellite Facility (ASF) DAAC"
+      ],
+      "required_format": "Sentinel-1 Single Look Complex (SLC) Level-1 product (.SAFE directory / zip)",
+      "average_file_size": "4.2 GB - 7.8 GB per uncompressed acquisition",
+      "blocking_reason": "Ger\u00e7ek Sentinel-1 SLC sahneleri ESA Copernicus Data Space Ecosystem API veya ASF API \u00fczerinden kullan\u0131c\u0131 kayd\u0131 ve aktif OAuth2 eri\u015fim anahtar\u0131 (credentials) gerektirmektedir. Ajan ortam\u0131nda harici ESA kullan\u0131c\u0131 oturumu bulunmad\u0131\u011f\u0131ndan ve tek bir SLC sahnesi 4-8 GB disk alan\u0131 t\u00fcketti\u011finden canl\u0131 indirme ger\u00e7ekle\u015ftirilememi\u015ftir.",
+      "architecture_readiness": "Sistem mimarisinde `scripts/sar_real_loader.py` ve `modules/module1_rda/` pipeline'\u0131, 512x512 kompleks I/Q matrislerini do\u011frudan i\u015fleyecek \u015fekilde tam haz\u0131rd\u0131r. Mevcut `sentinel1_maritime_sample.npy` verisi, Sentinel-1 SLC parametrelerine (C-band, 5.4 GHz, k\u0131y\u0131 g\u00f6zetleme geometrisi) sad\u0131k kal\u0131narak K-da\u011f\u0131l\u0131ml\u0131 deniz clutter sim\u00fclasyonu olarak \u00fcretilmi\u015f ve bu k\u0131s\u0131t `docs/LIMITATIONS.md` i\u00e7erisinde a\u00e7\u0131k\u00e7a belgelenmi\u015ftir."
+    }
+  }
+}

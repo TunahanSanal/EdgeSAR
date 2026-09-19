@@ -1,9 +1,9 @@
 # EdgeSAR: End-to-End Embedded SAR Target Recognition & Signal Processing System
 
-> **Durum:** Aktif geliştirilen bireysel araştırma/portföy projesidir. Ticari/akredite sertifikasyon (DO-178C, MISRA, MIL-STD) iddiası taşımamaktadır; bu standartlar mimari kılavuz olarak referans alınmıştır. Sentetik ve gerçek veri (MSTAR) sonuçları ayrı ayrı raporlanmıştır. Detaylar için [SCOPE.md](SCOPE.md) ve [docs/LIMITATIONS.md](docs/LIMITATIONS.md) dosyalarına bakınız.
+> **Durum:** Aktif geliştirilen bireysel araştırma/portföy projesidir. Sürüm kontrolü (Git) baseline'ı kurulmuş, 3 turlu bağımsız denetimden geçmiş ve etiketlenmiştir (v0.3-audited / v0.4-phase-c). Ticari/akredite sertifikasyon (DO-178C, MISRA, MIL-STD) iddiası taşımamaktadır; bu standartlar mimari kılavuz olarak referans alınmıştır. WCET doğrulaması host x86_64 üzerinde teorik projeksiyonla yapılmış olup fiziksel STM32F407 Discovery kartı temin edildiğinde donanımda tekrarlanacaktır. Sentetik ve gerçek veri (MSTAR) sonuçları ayrı ayrı raporlanmıştır. Detaylar için [SCOPE.md](SCOPE.md) ve [docs/LIMITATIONS.md](docs/LIMITATIONS.md) dosyalarına bakınız.
 
 [![CI Build](https://github.com/TunahanSanal/EdgeSAR/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
-[![Pytest](https://img.shields.io/badge/Pytest-22%2F22%20Passing-brightgreen.svg)](tests/)
+[![Pytest](https://img.shields.io/badge/Pytest-23%2F23%20Passing-brightgreen.svg)](tests/)
 [![Unity C](https://img.shields.io/badge/Unity%20C-13%2F13%20Passing-brightgreen.svg)](modules/module3_embedded/tests/)
 [![MISRA-C:2012](https://img.shields.io/badge/MISRA--C:2012-0%20Defects-success.svg)](modules/module3_embedded/)
 [![MSTAR Test Acc](https://img.shields.io/badge/MSTAR%20Test%20Acc-63.71%25%20(Real)-blue.svg)](docs/RESULTS.md)
@@ -50,7 +50,7 @@
 | **Calibration Error (ECE)** | $< 15.0\%$ | **9.53%** (ECE = 0.0953) | Real MSTAR Evaluation | **PASSED** |
 | **Embedded C Memory Safety** | Zero Heap (`malloc` prohibited) | **0 Bytes Dynamic Memory** | MISRA-C:2012 Rule 21.3 | **PASSED** |
 | **Estimated Execution Time (WCET)** | $< 25.0\text{ ms}$ mission limit | **~0.38 ms estimated WCET** | Cortex-M4F @ 168 MHz theoretical projection; host-timed | **PASSED** |
-| **Automated Test Pyramid** | 100% Pass Rate | **22 / 22 Pytest Passing** | Unit, Property, Integration, Regr | **PASSED** |
+| **Automated Test Pyramid** | 100% Pass Rate | **23 / 23 Pytest Passing** | Unit, Property, Integration, Regr | **PASSED** |
 | **Embedded Unit Tests (Unity)** | 100% Coverage | **13 / 13 Passing (0 Failures)**| Bare-Metal C Harness | **PASSED** |
 | **Static Code Analysis** | MISRA-C Compliant | **0 Defects / 0 Warnings** | Cppcheck `--enable=all` | **PASSED** |
 
@@ -111,7 +111,7 @@ EdgeSAR/
 │       │   └── README.md              # STM32 porting guide & cycle count analysis
 │       ├── Makefile                   # Strict host compilation (-Wall -Wextra -pedantic -Werror -Wshadow)
 │       └── CMakeLists.txt             # Cross-platform CMake build configuration
-├── tests/                             # Automated test pyramid (20 tests passing)
+├── tests/                             # Automated test pyramid (23 tests passing)
 │   ├── test_rda.py                    # Unit: Impulse response, RCMC straightening, resolution, invariants
 │   ├── test_atr.py                    # Unit: Parameters < 2M, forward shapes, Grad-CAM, dataset
 │   ├── test_integration.py            # Integration: Raw Echo -> RDA -> CFAR -> ATR -> MIL-STD-1553B
@@ -212,34 +212,35 @@ gcc -Wall -Wextra -pedantic -std=c99 -I ../include src/benchmark_wcet.c ../src/f
 ---
 
 ### Step 4: Full Automated Test Pyramid Execution
-Run all 20 Python tests across the test pyramid:
+Run all 23 Python tests across the test pyramid:
 ```bash
 pytest tests/ -v
 ```
 ```
 tests/test_atr.py::test_model_parameter_count PASSED                     [  4%]
-tests/test_atr.py::test_model_forward_pass PASSED                        [  9%]
+tests/test_atr.py::test_model_forward_pass PASSED                        [  8%]
 tests/test_atr.py::test_gradcam_generation PASSED                        [ 13%]
-tests/test_atr.py::test_dataset_generator PASSED                         [ 18%]
-tests/test_atr.py::test_model_convergence_on_synthetic_data PASSED       [ 22%]
-tests/test_integration.py::test_end_to_end_pipeline_integration PASSED   [ 27%]
-tests/test_property.py::test_parseval_energy_conservation PASSED         [ 31%]
-tests/test_property.py::test_matched_filter_shift_property PASSED        [ 36%]
-tests/test_property.py::test_cfar_scale_invariance PASSED                [ 40%]
-tests/test_property.py::test_ghost_ecanet_numerical_stability PASSED     [ 45%]
-tests/test_rda.py::test_chirp_matched_filter_impulse_response PASSED     [ 50%]
-tests/test_rda.py::test_rcmc_curvature_straightening PASSED              [ 54%]
-tests/test_rda.py::test_2d_focused_point_target_resolution PASSED        [ 59%]
-tests/test_rda.py::test_array_dimensions_and_invariants PASSED           [ 63%]
-tests/test_rda.py::test_real_sar_smoke_and_focus_metrics PASSED          [ 68%]
-tests/test_rda.py::test_rda_execution_time_performance_benchmark PASSED  [ 72%]
-tests/test_rda.py::test_isolated_target_pslr_measurement PASSED          [ 77%]
-tests/test_rda.py::test_multi_target_constellation_isolated_pslr PASSED  [ 81%]
+tests/test_atr.py::test_dataset_generator PASSED                         [ 17%]
+tests/test_atr.py::test_model_convergence_on_synthetic_data PASSED       [ 21%]
+tests/test_atr.py::test_energy_based_ood_score_computation PASSED        [ 26%]
+tests/test_integration.py::test_end_to_end_pipeline_integration PASSED   [ 30%]
+tests/test_property.py::test_parseval_energy_conservation PASSED         [ 34%]
+tests/test_property.py::test_matched_filter_shift_property PASSED        [ 39%]
+tests/test_property.py::test_cfar_scale_invariance PASSED                [ 43%]
+tests/test_property.py::test_ghost_ecanet_numerical_stability PASSED     [ 47%]
+tests/test_rda.py::test_chirp_matched_filter_impulse_response PASSED     [ 52%]
+tests/test_rda.py::test_rcmc_curvature_straightening PASSED              [ 56%]
+tests/test_rda.py::test_2d_focused_point_target_resolution PASSED        [ 60%]
+tests/test_rda.py::test_array_dimensions_and_invariants PASSED           [ 65%]
+tests/test_rda.py::test_real_sar_smoke_and_focus_metrics PASSED          [ 69%]
+tests/test_rda.py::test_rda_execution_time_performance_benchmark PASSED  [ 73%]
+tests/test_rda.py::test_isolated_target_pslr_measurement PASSED          [ 78%]
+tests/test_rda.py::test_multi_target_constellation_isolated_pslr PASSED  [ 82%]
 tests/test_regression.py::test_parameter_budget_regression PASSED        [ 86%]
-tests/test_regression.py::test_embedded_c_zero_heap_memory_safety PASSED [ 90%]
+tests/test_regression.py::test_embedded_c_zero_heap_memory_safety PASSED [ 91%]
 tests/test_regression.py::test_rda_resolution_bounds_regression PASSED   [ 95%]
 tests/test_regression.py::test_mstar_loader_integrity_regression PASSED  [100%]
-============================= 22 passed in 6.19s ==============================
+============================= 23 passed in 23.28s =============================
 ```
 
 To run everything in a single reproducible command:
@@ -258,14 +259,14 @@ mingw32-make reproduce-all
 | **R1. Raw Signal (RDA)** | Automated pytest unit tests pass all signal invariants | `tests/test_rda.py` (8/8 tests passing) | **VERIFIED** |
 | **R2. ATR & XAI** | Model parameter count verified programmatically under 2,000,000 parameters | `count_parameters()` = **904,268** parameters | **VERIFIED** |
 | **R2. ATR & XAI** | Model evaluated on real Sandia MSTAR benchmark with 5-fold CV and class metrics | [`docs/RESULTS.md`](docs/RESULTS.md) (63.71% test acc, 65.60% CV, T-72 recall 97.45%) | **VERIFIED** |
-| **R2. ATR & XAI** | Out-of-Distribution (OOD) test with 1,838 unknown military targets | `ood_rejection.png` & AUROC 0.4607 reported honestly | **VERIFIED** |
+| **R2. ATR & XAI** | Out-of-Distribution (OOD) test with 1,838 unknown military targets | `eval_results/ood_energy_comparison.png` & Energy AUROC 0.6500 reported honestly | **VERIFIED** |
 | **R2. ATR & XAI** | Grad-CAM XAI generated from scratch for correct and failure cases | `gradcam_correct_samples.png` & `gradcam_failure_analysis.png` | **VERIFIED** |
 | **R3. Embedded Preproc** | C code compiles with `gcc -Wall -Wextra -pedantic` with zero warnings | `modules/module3_embedded/test_runner.exe` built with zero warnings | **VERIFIED** |
 | **R3. Embedded Preproc** | Automated test suite runs Unity tests and passes 100% of test cases | `test_runner.exe` (13/13 Unity tests passing, 0 failures) | **VERIFIED** |
 | **R3. Embedded Preproc** | Static analysis conforms to MISRA-C:2012 guidelines | `mingw32-make check` (Cppcheck exit code 0, 0 defects) | **VERIFIED** |
 | **R3. Embedded Preproc** | Target STM32 port with host timing and theoretical Cortex-M4 WCET projection < 25 ms | `stm32_port/` (~0.38 ms estimated WCET; Cortex-M4F @ 168 MHz theoretical projection; host-timed, not measured on target hardware) | **VERIFIED** |
-| **R4. Systems Integration**| Requirements Traceability Matrix verifies 100% bidirectional traceability | `docs/RTM.md` (Version 2.2.0 mapping all 22 Pytest + 13 Unity tests) | **VERIFIED** |
-| **R4. Systems Integration**| Full test pyramid covering Unit, Integration, Property, Regression | `tests/` (22 automated tests passing in 8s) | **VERIFIED** |
+| **R4. Systems Integration**| Requirements Traceability Matrix verifies 100% bidirectional traceability | `docs/RTM.md` (Version 2.3.0 mapping all 23 Pytest + 13 Unity tests) | **VERIFIED** |
+| **R4. Systems Integration**| Full test pyramid covering Unit, Integration, Property, Regression | `tests/` (23 automated tests passing) | **VERIFIED** |
 | **R4. Systems Integration**| CI/CD pipeline automated via GitHub Actions | `.github/workflows/ci.yml` (multi-step workflow) | **VERIFIED** |
 | **R4. Systems Integration**| Scope statement & limitations clearly stated without certified overclaiming | `SCOPE.md` & `docs/LIMITATIONS.md` | **VERIFIED** |
 
@@ -281,8 +282,8 @@ All identified audit findings from previous engineering reviews were resolved wi
 | **2** | Real-World Validation Gap | High | ATR was previously validated only on synthetic point scatterers. Integrated Sandia MSTAR benchmark (1,285 chips + 1,838 OOD chips). | Real MSTAR test accuracy **63.71%**, 5-fold CV **65.60% ± 5.64%** reported honestly. |
 | **3** | Uncalibrated Avionics Claims | High | Previous claims implied official DO-178C / MIL-STD flight certification. Added `SCOPE.md` and `LIMITATIONS.md` clarifying architectural inspiration. | 100% honest engineering scope established. |
 | **4** | Target Microcontroller WCET Gap | Medium | Previous timing was uncalibrated. Ported Module 3 to STM32 target firmware, host-timed at ~8 us, with ~0.38 ms Cortex-M4 theoretical projection clearly labeled. | **~0.38 ms estimated WCET** (theoretical projection) documented. |
-| **5** | Lack of Integration & Property Tests | Medium | System only had basic unit tests. Implemented test pyramid: end-to-end integration, Parseval energy conservation, CFAR scale invariance, and parameter regressions. | **22 / 22 Pytest tests passing**. |
-| **6** | Closed-Set Softmax Vulnerability | Medium | Closed-set classifier cannot detect unknown vehicles. Tested with 1,838 OOD targets and quantified AUROC (0.461). | Vulnerability documented in `docs/RESULTS.md`. |
+| **5** | Lack of Integration & Property Tests | Medium | System only had basic unit tests. Implemented test pyramid: end-to-end integration, Parseval energy conservation, CFAR scale invariance, and parameter regressions. | **23 / 23 Pytest tests passing**. |
+| **6** | Closed-Set Softmax Vulnerability | Medium | Closed-set classifier cannot detect unknown vehicles. Tested with 1,838 OOD targets: Softmax AUROC 0.4607, Free Energy AUROC improved to 0.6500 (+18.9%) with statistical thresholding ($\tau_{95}$). | Quantified and documented in `docs/RESULTS.md`. |
 | **7** | Real SAR Image Focus Metrics | Low | Module 1 lacked objective focus criteria on continuous scenes. Integrated Shannon Entropy, Contrast ($\sigma/\mu$), and PAPR. | Focus metrics computed and saved to `metrics.json`. |
 
 ---

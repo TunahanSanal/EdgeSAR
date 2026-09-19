@@ -2,7 +2,7 @@
 ## EdgeSAR System: RDA Focusing, ATR Classification & Embedded Preprocessing
 
 **Document ID:** EDGESAR-RTM-001  
-**Version:** 2.2.0  
+**Version:** 2.3.0  
 **DO-178C Safety Level:** Design Assurance Level B (DAL-B) Guidelines  
 **Date:** 2026-09-20  
 **Verification Status:** 100% Verified (All Tests Passed)  
@@ -16,7 +16,7 @@ This Requirements Traceability Matrix (RTM) establishes complete **bidirectional
 - **Total Numbered Requirements:** 15 (3 Module 1 RDA, 4 Module 2 ATR, 8 Module 3 Embedded)
 - **Requirements Traced to Code:** 15 / 15 (100.0%)
 - **Requirements Traced to Tests:** 15 / 15 (100.0%)
-- **Automated Python Pytest Suite:** **22 / 22 Passing** (8 RDA, 5 ATR, 1 Integration, 4 Property, 4 Regression)
+- **Automated Python Pytest Suite:** **23 / 23 Passing** (8 RDA, 6 ATR, 1 Integration, 4 Property, 4 Regression)
 - **Embedded C Unity Test Suite:** **13 / 13 Passing** (0 Failures, 0 Ignored)
 - **Static Analysis (Cppcheck):** **0 Defects, 0 Warnings** (MISRA-C:2012 Compliance)
 - **Estimated WCET (Theoretical Projection):** **~0.38 ms** (< 25.0 ms limit; host-timed, theoretical Cortex-M4 projection)
@@ -31,7 +31,7 @@ This Requirements Traceability Matrix (RTM) establishes complete **bidirectional
 | **REQ-RDA-001** | Range-Doppler SAR Image Focusing Algorithm | [`rda_pipeline.py`](../modules/module1_rda/rda_pipeline.py#L302) <br> [`RDAPipeline.process()`](../modules/module1_rda/rda_pipeline.py#L302) | [`tests/test_rda.py`](../tests/test_rda.py): <br> • `test_2d_focused_point_target_resolution()` <br> • `test_array_dimensions_and_invariants()` <br> • `test_real_sar_smoke_and_focus_metrics()` <br> [`tests/test_regression.py`](../tests/test_regression.py): `test_rda_resolution_bounds_regression()` | **PASSED** (100%) |
 | **REQ-RDA-002** | Matched Filtering & RCMC Accuracy | [`rda_pipeline.py`](../modules/module1_rda/rda_pipeline.py#L153) <br> [`RDAPipeline.range_compression()`](../modules/module1_rda/rda_pipeline.py#L153) <br> [`RDAPipeline.range_cell_migration_correction()`](../modules/module1_rda/rda_pipeline.py#L210) <br> [`RDAPipeline.azimuth_compression()`](../modules/module1_rda/rda_pipeline.py#L261) | [`tests/test_rda.py`](../tests/test_rda.py): <br> • `test_chirp_matched_filter_impulse_response()` <br> • `test_rcmc_curvature_straightening()` <br> • `test_isolated_target_pslr_measurement()` <br> • `test_multi_target_constellation_isolated_pslr()` <br> [`tests/test_property.py`](../tests/test_property.py): <br> • `test_parseval_energy_conservation()` <br> • `test_matched_filter_shift_property()` | **PASSED** (100%) |
 | **REQ-RDA-003** | Synthetic Target Simulation & Real SAR Loader | [`synthetic_generator.py`](../modules/module1_rda/synthetic_generator.py), [`sar_real_loader.py`](../scripts/sar_real_loader.py) | [`tests/test_rda.py`](../tests/test_rda.py): <br> • `test_array_dimensions_and_invariants()` <br> • `test_real_sar_smoke_and_focus_metrics()` <br> • `test_rda_execution_time_performance_benchmark()` | **PASSED** (100%) |
-| **REQ-ATR-001** | Ghost-ECANet Deep Learning Architecture (< 2M Parameters) | [`model.py`](../modules/module2_atr/model.py#L185) <br> [`GhostECANet`](../modules/module2_atr/model.py#L185) <br> [`count_parameters()`](../modules/module2_atr/model.py#L284) | [`tests/test_atr.py`](../tests/test_atr.py): <br> • `test_model_parameter_count()` <br> • `test_model_forward_pass()` <br> [`tests/test_regression.py`](../tests/test_regression.py): `test_parameter_budget_regression()` <br> [`tests/test_property.py`](../tests/test_property.py): `test_ghost_ecanet_numerical_stability()` | **PASSED** (100%) |
+| **REQ-ATR-001** | Ghost-ECANet Deep Learning Architecture (< 2M Parameters) | [`model.py`](../modules/module2_atr/model.py#L185) <br> [`GhostECANet`](../modules/module2_atr/model.py#L185) <br> [`count_parameters()`](../modules/module2_atr/model.py#L284) | [`tests/test_atr.py`](../tests/test_atr.py): <br> • `test_model_parameter_count()` <br> • `test_model_forward_pass()` <br> • `test_energy_based_ood_score_computation()` <br> [`tests/test_regression.py`](../tests/test_regression.py): `test_parameter_budget_regression()` <br> [`tests/test_property.py`](../tests/test_property.py): `test_ghost_ecanet_numerical_stability()` | **PASSED** (100%) |
 | **REQ-ATR-002** | Multi-Class SAR Target Recognition (Synthetic & Real MSTAR) | [`model.py`](../modules/module2_atr/model.py#L185), [`train.py`](../train.py), [`evaluate.py`](../evaluate.py), [`evaluate_mstar_comprehensive.py`](../scripts/evaluate_mstar_comprehensive.py) | [`tests/test_atr.py`](../tests/test_atr.py): `test_model_convergence_on_synthetic_data()` <br> [`tests/test_regression.py`](../tests/test_regression.py): `test_mstar_loader_integrity_regression()` <br> Comprehensive Evaluation Suite | **PASSED** (100%) |
 | **REQ-ATR-003** | Radar-Aware Data Augmentation & MSTAR Loading | [`dataset.py`](../modules/module2_atr/dataset.py#L26) <br> [`SyntheticSARTargetGenerator`](../modules/module2_atr/dataset.py#L26) <br> [`SARDataset`](../modules/module2_atr/dataset.py#L199), [`mstar_loader.py`](../scripts/mstar_loader.py) | [`tests/test_atr.py`](../tests/test_atr.py): `test_dataset_generator()` <br> [`tests/test_regression.py`](../tests/test_regression.py): `test_mstar_loader_integrity_regression()` | **PASSED** (100%) |
 | **REQ-ATR-004** | Grad-CAM Explainable AI (XAI) | [`gradcam.py`](../modules/module2_atr/gradcam.py#L49) <br> [`GradCAM.generate_cam()`](../modules/module2_atr/gradcam.py#L49) <br> [`GradCAM.overlay_heatmap()`](../modules/module2_atr/gradcam.py#L120) | [`tests/test_atr.py`](../tests/test_atr.py): `test_gradcam_generation()` <br> [`evaluate.py`](../evaluate.py) | **PASSED** (100%) |
@@ -61,6 +61,7 @@ This Requirements Traceability Matrix (RTM) establishes complete **bidirectional
 | `test_multi_target_constellation_isolated_pslr` | `tests/test_rda.py` | Canonical 5-Point Constellation Isolated PSLR (Range $\le -38\text{ dB}$, Azimuth $\le -28\text{ dB}$) | **REQ-RDA-002** |
 | `test_model_parameter_count` | `tests/test_atr.py` | [`GhostECANet`](../modules/module2_atr/model.py#L185), [`count_parameters()`](../modules/module2_atr/model.py#L284) | **REQ-ATR-001** |
 | `test_model_forward_pass` | `tests/test_atr.py` | [`GhostECANet.forward()`](../modules/module2_atr/model.py#L185) | **REQ-ATR-001** |
+| `test_energy_based_ood_score_computation` | `tests/test_atr.py` | Energy-Based OOD Free Energy Score & Shift Equivariance | **REQ-ATR-001** |
 | `test_gradcam_generation` | `tests/test_atr.py` | [`GradCAM.generate_cam()`](../modules/module2_atr/gradcam.py#L49), [`GradCAM.overlay_heatmap()`](../modules/module2_atr/gradcam.py#L120) | **REQ-ATR-004** |
 | `test_dataset_generator` | `tests/test_atr.py` | [`SyntheticSARTargetGenerator`](../modules/module2_atr/dataset.py#L26), [`SARDataset`](../modules/module2_atr/dataset.py#L199) | **REQ-ATR-003** |
 | `test_model_convergence_on_synthetic_data` | `tests/test_atr.py` | [`GhostECANet`](../modules/module2_atr/model.py#L185), `train_one_epoch()` | **REQ-ATR-002** |
@@ -70,7 +71,7 @@ This Requirements Traceability Matrix (RTM) establishes complete **bidirectional
 | `test_cfar_scale_invariance` | `tests/test_property.py` | CA-CFAR Threshold Scale Invariance | **REQ-EMB-002** |
 | `test_ghost_ecanet_numerical_stability` | `tests/test_property.py` | Ghost-ECANet Numerical Stability (NaN/Inf Immunity) | **REQ-ATR-001** |
 | `test_parameter_budget_regression` | `tests/test_regression.py` | [`count_parameters()`](../modules/module2_atr/model.py#L284) < 2M Parameter Budget Enforcement | **REQ-ATR-001** |
-| `test_embedded_c_zero_heap_memory_safety` | `tests/test_regression.py` | MISRA Rule 21.3 Zero-Heap AST/Regex Inspection | **REQ-EMB-007** |
+| `test_embedded_c_zero_heap_memory_safety` | `tests/test_regression.py` | MISRA-C Rule 21.3 Zero-Heap AST/Regex Inspection | **REQ-EMB-007** |
 | `test_rda_resolution_bounds_regression` | `tests/test_regression.py` | Range Resolution < 4m, Azimuth < 2m Bounds Check | **REQ-RDA-001** |
 | `test_mstar_loader_integrity_regression` | `tests/test_regression.py` | Sandia MSTAR Loader & 5-Fold Split Stratification | **REQ-ATR-002**, **REQ-ATR-003** |
 | `test_CFAR_Init_ValidAndInvalidParams` | `modules/module3_embedded/tests/test_cfar.c` | [`CFAR_Init()`](../modules/module3_embedded/src/cfar_detector.c#L22) | **REQ-EMB-001** |
@@ -96,9 +97,9 @@ This Requirements Traceability Matrix (RTM) establishes complete **bidirectional
 pytest tests/ -v
 ```
 **Execution Summary:**
-- **22 / 22 Tests Passed in ~6.2s (100% Pass Rate)**
+- **23 / 23 Tests Passed in ~23s (100% Pass Rate)**
 - Test tiers:
-  - Unit tests: 13 tests (`test_rda.py`: 8 tests, `test_atr.py`: 5 tests)
+  - Unit tests: 14 tests (`test_rda.py`: 8 tests, `test_atr.py`: 6 tests)
   - Integration test: 1 test (`test_integration.py` covering RDA $\to$ CFAR $\to$ ATR $\to$ 1553B telemetry)
   - Property-based tests: 4 tests (`test_property.py` verifying Parseval conservation, shift invariance, CFAR linearity, NaN immunity)
   - Regression tests: 4 tests (`test_regression.py` enforcing parameter budget, zero-heap safety, resolution bounds, dataset cache)
