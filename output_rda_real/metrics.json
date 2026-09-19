@@ -1,0 +1,14 @@
+{
+  "input": "real",
+  "source": "simulated_open (Sentinel-1-style K-distributed)",
+  "range_res_m": 2.498270483333333,
+  "azimuth_res_m": 1.3499999999999999,
+  "range_pslr_db": -5.030358815472157,
+  "azimuth_pslr_db": -3.295893216130114,
+  "isolated_range_pslr_db": -5.867244444017068,
+  "isolated_azimuth_pslr_db": -3.2958932161301147,
+  "entropy": 12.04710620805987,
+  "contrast": 1.0124748221017963,
+  "papr_db": 11.476332946977305,
+  "execution_time_s": 0.03198552131652832
+}

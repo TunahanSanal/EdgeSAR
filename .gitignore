@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# C / Embedded build artifacts
+*.o
+*.obj
+*.exe
+*.elf
+*.bin
+*.hex
+modules/module3_embedded/test_runner.exe
+modules/module3_embedded/stm32_port/src/benchmark_test.exe
+benchmark_wcet.exe
+
+# LaTeX temporary files
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# OS / Editor temporary files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

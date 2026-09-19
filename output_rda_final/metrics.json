@@ -1,0 +1,12 @@
+{
+  "input": "synthetic",
+  "source": "synthetic",
+  "range_res_m": 3.7474057249999997,
+  "azimuth_res_m": 1.05,
+  "range_pslr_db": -42.23480451265039,
+  "azimuth_pslr_db": -7.436763613175158,
+  "entropy": 5.347168016626484,
+  "contrast": 64.41073899198568,
+  "papr_db": 40.83417461128333,
+  "execution_time_s": 0.06700801849365234
+}
