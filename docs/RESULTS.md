@@ -22,7 +22,7 @@ Aşağıdaki tablo, sentetik saçıcı benzetimi ile gerçek Sandia MSTAR verisi
 | Değerlendirme Boyutu | Sentetik Saçıcı Kıyaslaması | Gerçek Sandia MSTAR (Standart 17° $\to$ 15°) | Gerçek MSTAR 5-Fold Stratified Çapraz Doğrulama |
 |---|:---:|:---:|:---:|
 | **Veri Kümesi** | Fizik tabanlı 2B saçıcı simülatörü | Sandia Labs X-Band MSTAR Veritabanı | Sandia Labs X-Band MSTAR Veritabanı |
-| **Toplam Örnek Sayısı** | 600 çip (Eğitim: 450, Test: 150) | 1,285 çip (Eğitim: 698, Test: 587) | 1,285 çip (5 katmanlı tabakalı bölütleme) |
+| **Toplam Örnek Sayısı** | 675 çip (Eğitim: 600, Test: 75) | 1,285 çip (Eğitim: 698, Test: 587) | 1,285 çip (5 katmanlı tabakalı bölütleme) |
 | **Depresyon Açıları** | Sabit / Sentetik | **Eğitim: 17° \| Test: 15°** (Standart SOC) | 17° ve 15° karışık tabakalı |
 | **Hedef Sınıfları** | 3 Sınıf (T-72, BMP-2, BTR-70) | 3 Sınıf (T-72, BMP-2, BTR-70) | 3 Sınıf (T-72, BMP-2, BTR-70) |
 | **Genel Doğruluk (Accuracy)** | **%100.00** | **%63.71** | **%65.60 ± %5.64** |

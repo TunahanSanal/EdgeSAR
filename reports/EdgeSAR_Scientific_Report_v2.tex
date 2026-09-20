@@ -27,7 +27,7 @@
 \graphicspath{{../report_assets/}{report_assets/}}
 
 % -- Tables and Floats --
-\usepackage{booktabs,multirow,array,tabularx,xltabular}
+\usepackage{booktabs,multirow,array,tabularx,xltabular,makecell}
 \usepackage{float}
 \usepackage[font=small,labelfont=bf,skip=6pt]{caption}
 \usepackage{subcaption}
@@ -88,7 +88,7 @@ Sistem dört turlu bağımsız denetim metodolojisinden geçmiş; doğrulanabili
 \noindent\small\textbf{Anahtar Kelimeler:} Sentetik Açıklıklı Radar (SAR), Range-Doppler Algoritması (RDA), Sandia MSTAR, Ghost-ECANet, Out-of-Distribution (OOD), Free Energy Score, CA-CFAR, MISRA-C:2012, WCET Projeksiyonu.
 \end{abstract}
 
-\vspace{0.4cm}
+\newpage
 {\setstretch{0.95}\small\tableofcontents}
 \newpage
 
@@ -201,7 +201,7 @@ Model, gerçek dünya koşullarını temsil etmek amacıyla Sandia Labs tarafın
 \subsection{Gerçek Veri Doğrulaması: Speckle İstatistiği}
 MSTAR görüntülerinin sentetik değil gerçek radar ekoları içerdiğini matematiksel olarak kanıtlamak amacıyla saçılma istatistiği ($\sigma / \mu$) analiz edilmiştir:
 \begin{itemize}
-    \item Gerçek MSTAR zemin kargaşası ve hedef dağılımı: $\sigma / \mu \in [0.71, 0.94]$ aralığında olup Rayleigh/Gamma dağılımlı doğal radar speckle karakteristiği sergiler.
+    \item Gerçek MSTAR zemin kargaşası ve hedef dağılımı: $\sigma / \mu \in [0.71, 0.94]$ aralığında olup Rayleigh/\allowbreak Gamma dağılımlı doğal radar speckle karakteristiği sergiler.
     \item Sentetik nokta saçıcı benzetiminde ise bu oran deterministik saçıcılar sebebiyle $\sigma / \mu \in [1.15, 1.39]$ seviyesindedir. Bu fark, verinin yapay olmadığını ampirik olarak belgeler.
 \end{itemize}
 
@@ -210,14 +210,15 @@ MSTAR görüntülerinin sentetik değil gerçek radar ekoları içerdiğini mate
 \begin{table}[htbp]
 \centering
 \small
+\setlength{\tabcolsep}{4pt}
 \caption{Sentetik Oyuncak Veri ile Gerçek Sandia MSTAR Karşılaştırması}
 \label{tab:mstar_vs_synthetic}
-\begin{tabularx}{\textwidth}{Xccc}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.5cm} >{\centering\arraybackslash}p{3.4cm} >{\centering\arraybackslash}p{4.2cm} >{\centering\arraybackslash}X}
 \toprule
-\textbf{Değerlendirme Boyutu} & \textbf{Sentetik Benzetim} & \textbf{Gerçek MSTAR (17° $\to$ 15°)} & \textbf{5-Fold Stratified CV} \\
+\textbf{Değerlendirme Boyutu} & \makecell{\textbf{Sentetik}\\\textbf{Benzetim}} & \makecell{\textbf{Gerçek MSTAR}\\\textbf{(17° $\to$ 15° SOC)}} & \makecell{\textbf{Gerçek MSTAR}\\\textbf{5-Fold CV}} \\
 \midrule
 Veri Kaynağı & Nokta Saçıcı Simülatörü & Sandia X-Band MSTAR & Sandia X-Band MSTAR \\
-Toplam Hedef Örneği & 600 çip (Eğitim: 450, Test: 150) & 1,285 çip (Eğitim: 698, Test: 587) & 1,285 çip (5 katman) \\
+Toplam Hedef Örneği & 675 çip (Eğitim: 600, Test: 75) & 1,285 çip (Eğitim: 698, Test: 587) & 1,285 çip (5 katman) \\
 \textbf{Doğruluk (Accuracy)} & \textbf{\%100.00} & \textbf{\%63.71} & \textbf{\%65.60 $\pm$ \%5.64} \\
 \textbf{Makro F1-Skoru} & \textbf{\%100.00} & \textbf{\%60.86} & \textbf{\%61.81 $\pm$ \%7.09} \\
 Makro Kesinlik / Duyarlılık & \%100.00 / \%100.00 & \%61.21 / \%63.66 & \%66.20 / \%65.33 \\
@@ -227,8 +228,9 @@ Parametre Sayısı & 904,268 ($<2.0\text{M}$) & 904,268 ($<2.0\text{M}$) & 904,2
 \end{tabularx}
 \end{table}
 
-\textbf{Not (Tekrarlanabilirlik ve Checkpoint Kararlılığı):} Tablo \ref{tab:mstar_vs_synthetic}'teki \%63.71 doğruluk, depoda commit'li \texttt{best\_mstar\_model.pth} ağırlıklarına aittir ve \texttt{python scripts/evaluate\_mstar\_comprehensive.py} ile deterministik olarak üretilebilir. Küçük veri setinde (698 örnek) sıfırdan yapılan taze eğitimler (\texttt{--retrain}) rastgele seed varyansı nedeniyle farklı ve daha yüksek sonuçlar (\%82.96) verebilmektedir; bilimsel tutarlılık adına rapordaki tüm analizler sabit checkpoint üzerinden yürütülmüştür.
+\textbf{Not (Tekrarlanabilirlik ve Checkpoint Kararlılığı):} Tablo \ref{tab:mstar_vs_synthetic}'teki \%63.71 doğruluk, depoda commit'li \path{best_mstar_model.pth} ağırlıklarına aittir ve \url{scripts/evaluate_mstar_comprehensive.py} değerlendirme betiğiyle deterministik olarak üretilebilir. Küçük veri setinde (698 örnek) sıfırdan yapılan taze eğitimler (\texttt{--retrain}) rastgele seed varyansı nedeniyle farklı ve daha yüksek sonuçlar (\%82.96) verebilmektedir; bilimsel tutarlılık adına rapordaki tüm analizler sabit checkpoint üzerinden yürütülmüştür.
 
+\clearpage
 \begin{table}[htbp]
 \centering
 \small
@@ -270,21 +272,26 @@ Parametre Sayısı & 904,268 ($<2.0\text{M}$) & 904,268 ($<2.0\text{M}$) & 904,2
 \label{fig:mstar_curves}
 \end{figure}
 
+\clearpage
 \subsection{Sınıf Ağırlıklandırma Ödünleşimi (Trade-Off) Analizi}
 BMP-2 sınıfının düşük duyarlılığını (\%30.26) iyileştirmek amacıyla kayıp fonksiyonunda sınıf ağırlıkları ($w_{\text{BMP-2}}$) artırılarak deneysel tarama yapılmıştır. Elde edilen bulgular, radar ATR alanında sıkça gizlenen kritik bir mühendislik ödünleşimini gözler önüne sermiştir:
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \small
+\setlength{\tabcolsep}{3.5pt}
 \caption{Sınıf Ağırlıklandırma Deneyleri ve 3x3 Karışıklık Matrisi Ödünleşimleri}
 \label{tab:class_weighting_tradeoff}
-\begin{tabularx}{\textwidth}{lcccccX}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.2cm} ccccc >{\raggedright\arraybackslash}X}
 \toprule
-\textbf{Yapılandırma} & \textbf{Ağırlıklar} & \textbf{Doğruluk} & \textbf{Makro F1} & \textbf{BMP-2 Rec.} & \textbf{BTR-70 Rec.} & \textbf{Kritik Bulgular ve Trade-Off} \\
+\textbf{Yapılandırma} & \textbf{Ağırlıklar} & \textbf{Doğruluk} & \makecell{\textbf{Makro}\\\textbf{F1}} & \makecell{\textbf{BMP-2}\\\textbf{Recall}} & \makecell{\textbf{BTR-70}\\\textbf{Recall}} & \textbf{Kritik Bulgular ve Trade-Off} \\
 \midrule
 \textbf{Baseline (Eşit)} & $[1.0, 1.0, 1.0]$ & \textbf{\%63.71} & \textbf{\%60.86} & \%30.26 & \textbf{\%63.27} & Dengeli model; T-72 Recall: \%97.45. \\
+\addlinespace[2pt]
 \textbf{Deneme 1 (Ilımlı)} & $[1.0, 2.0, 1.0]$ & \%61.16 & \%50.05 & \textbf{\%85.13} & \textbf{\%0.00} & BMP-2 arttı, ancak BTR-70 tamamen çöktü (182 BTR BMP-2'ye yöneldi). \\
+\addlinespace[2pt]
 \textbf{Deneme 2 (Ters Oran)} & $[1.0, 2.8, 1.2]$ & \%61.16 & \%50.46 & \%89.74 & \%0.00 & BTR-70 sıfır kaldı; Makro F1 \%50.46'ya geriledi. \\
+\addlinespace[2pt]
 \textbf{Deneme 3 (Agresif)} & $[0.6, 2.5, 1.0]$ & \%59.45 & \%50.40 & \%97.44 & \%1.53 & T-72 recall'u \%97.45'ten \%79.59'a geriledi. \\
 \bottomrule
 \end{tabularx}
@@ -299,6 +306,7 @@ BMP-2 sınıfının düşük duyarlılığını (\%30.26) iyileştirmek amacıyl
 
 \textbf{Mühendislik Kararı:} BMP-2 ağırlığının artırılması, benzer radar silüetine sahip BTR-70 personel taşıyıcısını tamamen yok ederek modeli tek taraflı önyargılı hale getirmektedir. Bu nedenle, genel sistem dengesini koruyan ve Makro F1'i en yüksek olan \textbf{Baseline modeli operasyonel model olarak muhafaza edilmiştir}.
 
+\clearpage
 \subsection{Enerji Tabanlı Dağılım Dışı (OOD) Tespiti ve Eşikleme Metodolojisi}
 Standart Softmax Maksimum Olasılık Skoru (MSP), kapalı küme varsayımı nedeniyle bilinmeyen hedeflere dahi yüksek güven atamaktadır ($AUROC = 0.4607$). Bu zafiyeti gidermek için logit uzayında serbest enerji (Free Energy) skoru uygulanmıştır:
 \begin{equation}
@@ -309,21 +317,25 @@ Sıcaklık katsayısı $T=5.0$ seçildiğinde OOD ayrım gücü \textbf{AUROC 0.
 
 \textbf{Metodolojik Dürüstlük (Eşik Seçim Yöntemi):} Eşik ($\tau_X$), OOD etiketleri bilinmeksizin \textbf{yalnızca bilinen eğitim/test kümesinin enerji dağılımının $X$. persentili} olarak belirlenmiştir: $\tau_X = \text{Percentile}(S_{\text{known}}, X)$.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \small
+\setlength{\tabcolsep}{3.5pt}
 \caption{Enerji Tabanlı OOD Eşikleme Metodolojisi ve Operasyonel Koruma Oranları}
 \label{tab:ood_thresholds}
-\begin{tabularx}{\textwidth}{lcccccX}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.2cm} ccccc >{\raggedright\arraybackslash}X}
 \toprule
-\textbf{Kriter} & \textbf{Persentil} & \textbf{Eşik ($\tau$)} & \textbf{Bilinen TPR} & \textbf{OOD FPR} & \textbf{OOD Reddetme} & \textbf{Değerlendirme} \\
+\textbf{Kriter} & \textbf{Persentil} & \makecell{\textbf{Eşik}\\\textbf{($\tau$)}} & \makecell{\textbf{Bilinen}\\\textbf{TPR}} & \makecell{\textbf{OOD}\\\textbf{FPR}} & \makecell{\textbf{OOD}\\\textbf{Reddi}} & \textbf{Operasyonel Değerlendirme} \\
 \midrule
 \textbf{TPR \%95 Koruma} & \%5.0 & 5.4572 & \textbf{\%94.89} & \%85.04 & \textbf{\%14.96} & Bilinen hedefler korunur, OOD reddi zayıftır. \\
-\textbf{TPR \%90 Koruma} & \%10.0 & 5.4620 & \textbf{\%89.95} & \%74.76 & \textbf{\%25.24} & Dengeli askeri eşikleme. \\
-\textbf{TPR \%80 Koruma} & \%20.0 & 5.4745 & \textbf{\%79.90} & \%59.14 & \textbf{\%40.86} & \%40 OOD reddi elde edilir. \\
+\addlinespace[2pt]
+\textbf{TPR \%90 Koruma} & \%10.0 & 5.4620 & \textbf{\%89.95} & \%74.76 & \textbf{\%25.24} & Dengeli askeri eşikleme seviyesi. \\
+\addlinespace[2pt]
+\textbf{TPR \%80 Koruma} & \%20.0 & 5.4745 & \textbf{\%79.90} & \%59.14 & \textbf{\%40.86} & \%40 OOD reddi elde edilir (koruma düşer). \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
 
 \begin{figure}[htbp]
 \centering
@@ -334,6 +346,7 @@ Sıcaklık katsayısı $T=5.0$ seçildiğinde OOD ayrım gücü \textbf{AUROC 0.
 
 \textbf{Açık Sınırlama:} \%95 bilinen hedef koruma eşiğinde ($\tau_{95}$), 1,838 bilinmeyen hedefin yalnızca \%14.96'sı reddedilebilmektedir. AUROC 0.6500 önemli bir ilerleme olmakla birlikte, operasyonel sistemlerde mesafe tabanlı açık-küme (Mahalanobis/OpenMax) algoritmalarına ihtiyaç duyulduğu açıktır.
 
+\clearpage
 \subsection{Grad-CAM ile Açıklanabilir Yapay Zekâ (XAI)}
 
 \begin{figure}[htbp]
@@ -349,6 +362,7 @@ Grad-CAM ısı haritaları incelendiğinde (Şekil \ref{fig:gradcam_correct}):
     \item \textbf{Hata Analizi:} BMP-2'nin BTR-70 ile karıştırıldığı durumlarda aktivasyon haritasının arka asker kapaklarına kaydığı, bu bölgedeki saçılmanın BTR-70 motor kapağı saçılmasıyla çakıştığı doğrulanmıştır.
 \end{itemize}
 
+\clearpage
 % =============================================================
 \section{Modül 3: Emniyet-Kritik Gömülü C Sinyal İşleme}
 % =============================================================
@@ -362,7 +376,7 @@ Modül 3, DO-178C DAL-B kılavuzları ve MISRA-C:2012 standartları referans al�
 \end{itemize}
 
 \subsection{Mutasyon Testi (Negative Control) ile Güvenlik Doğrulaması}
-Sıfır dinamik bellek kuralının regrese olmasını engellemek için geliştirilen AST tarayıcısı (\texttt{test\_regression.py}) mutasyon testine tabi tutulmuştur:
+Sıfır dinamik bellek kuralının regrese olmasını engellemek için geliştirilen ve \texttt{test\_}\allowbreak\texttt{regression.py} dosyasında koşan AST tarayıcısı mutasyon testine tabi tutulmuştur:
 \begin{enumerate}
     \item \texttt{stm32\_port/src/\_temp\_malloc\_test.c} dosyasına kasıtlı olarak bir \texttt{malloc(10)} çağrısı eklenmiş ve test koşturulmuştur. Test beklendiği gibi \textbf{KIRMIZI (FAILED)} vererek ihlali yakalamıştır.
     \item Geçici dosya silindiğinde test derhal \textbf{YEŞİL (PASSED)} durumuna dönmüştür. Bu çift yönlü kanıt, bellek koruma gardının gerçekten işlevsel olduğunu doğrular.
@@ -389,6 +403,7 @@ ARM Cortex-M4F mikrodenetleyicisi (STM32F407VG @ 168 MHz) için host üzerinde d
 
 \noindent\textbf{Önemli Mühendislik Notu:} Yukarıdaki 64,000 döngü ve 0.381 ms süresi, x86\_64 host üzerinde ölçülen zamanlamalardan ve Cortex-M4 komut verim oranlarından türetilmiş \textbf{teorik bir projeksiyondur}. Fiziksel kart temin edildiğinde DWT donanım sayacı ile doğrulanacaktır.
 
+\clearpage
 % =============================================================
 \section{Doğrulanabilirlik ve Bağımsız Denetim Süreci}
 % =============================================================
@@ -416,11 +431,12 @@ Rötuş \& Temizlik & \texttt{v0.4.2-polish} & Checkpoint/retrain şeffaflığı
 \textbf{Genel Güven Skoru: 9/10}  
 Denetim süreci sonunda projeye verilen 9/10 güven skoru; iddiaların arkasında durulduğunu, ancak fiziksel STM32 kartı üzerindeki donanım içi DWT ölçümlerinin henüz tamamlanmamış olmasını ve MSTAR eğitiminde seed'e bağlı varyansı dürüstçe yansıtmaktadır.
 
+\clearpage
 % =============================================================
 \section{Deneysel Test Özeti}
 % =============================================================
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \small
 \caption{Otomatik Doğrulama ve Test Piramidi (100\% Başarı)}
