@@ -33,3 +33,8 @@ build/
 Thumbs.db
 .vscode/
 .idea/
+
+# Archive & Local Backups
+_archive/
+*.zip
+full_inventory_before_cleanup.csv

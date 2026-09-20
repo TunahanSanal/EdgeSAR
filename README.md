@@ -11,7 +11,7 @@
 [![Synthetic F1](https://img.shields.io/badge/Synthetic%20F1-100.00%25%20(Toy)-lightgrey.svg)](eval_results/f1_metrics.txt)
 [![Parameters](https://img.shields.io/badge/Model%20Size-904K%20%28%3C2M%29-brightgreen.svg)](modules/module2_atr/)
 [![Estimated WCET](https://img.shields.io/badge/Est.%20WCET-~0.38%20ms%20%28Theoretical%29-brightgreen.svg)](modules/module3_embedded/stm32_port/)
-[![Scientific Report](https://img.shields.io/badge/Scientific%20Report-11%20Pages%20PDF-purple.svg)](EdgeSAR_Scientific_Report.pdf)
+[![Scientific Report](https://img.shields.io/badge/Scientific%20Report-13%20Pages%20PDF-purple.svg)](reports/EdgeSAR_Scientific_Report_v2.pdf)
 
 ---
 
@@ -19,19 +19,40 @@
 
 **EdgeSAR** is an end-to-end, zero-black-box Synthetic Aperture Radar (SAR) processing, target recognition, and embedded flight-avionics software suite. It bridges raw electromagnetic signal processing, parameter-efficient deep learning Automatic Target Recognition (ATR) with Explainable AI (XAI), safety-critical bare-metal embedded C preprocessing inspired by **DO-178C Level B** and **MISRA-C:2012** guidelines, and aerospace bus systems integration (**MIL-STD-1553B** and **MIL-STD-882E**).
 
-```
- ┌───────────────────────────────────────────────────────────────────────────────────────────────┐
- │                                   EdgeSAR End-to-End Pipeline                                 │
- ├──────────────────┬──────────────────────┬──────────────────────┬──────────────────────────────┤
- │  1. Raw Signals  │  2. Embedded Edge    │   3. Deep ATR & XAI  │   4. Avionics Integration    │
- │ (Physics / RDA)  │ (MISRA-C / DO-178C)  │ (Ghost-ECANet < 2M)  │   (MIL-STD-1553B / 882E)     │
- ├──────────────────┼──────────────────────┼──────────────────────┼──────────────────────────────┤
- │ • LFM Chirp RX   │ • Ping-Pong DMA HAL  │ • 904k Parameter CNN │ • Dual-Redundant 1553B Bus   │
- │ • Range Matched  │ • Radix-2 DIT FFT    │ • T-72 / BMP-2 / BTR │ • 20-bit Manchester Encoding │
- │ • Exact RCMC     │ • CA-CFAR 1D Window  │ • Real MSTAR (63.7%) │ • FMEA Safety Hazard Matrix  │
- │ • Azimuth Focus  │ • Sub-bin Parabolic  │ • Grad-CAM Scatterer │ • Subaddresses 1 to 4        │
- │   (Simulated Sentinel-style)│ • 100% Unity Tests │ Heatmap Overlays │ • Zero Heap / Static Buffers │
- └──────────────────┴──────────────────────┴──────────────────────┴──────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph S1["1. Raw Signal Processing (RDA)"]
+        direction TB
+        A1["Raw Chirp I/Q Echo"] --> A2["Range Matched Filter"]
+        A2 --> A3["Range Cell Migration (RCMC)"]
+        A3 --> A4["Azimuth Matched Filter"]
+        A4 --> A5["2D Focused SAR Image"]
+    end
+
+    subgraph S2["2. Embedded C Core (MISRA-C / Zero-Heap)"]
+        direction TB
+        B1["Ping-Pong DMA HAL"] --> B2["Radix-2 DIT FFT"]
+        B2 --> B3["CA-CFAR Target Detection"]
+        B3 --> B4["Target ROI Bounding Box"]
+    end
+
+    subgraph S3["3. Deep ATR & Explainable AI (Ghost-ECANet)"]
+        direction TB
+        C1["SAR Chip (64x64)"] --> C2["Ghost Convolutions (<2M)"]
+        C2 --> C3["ECA Attention & Free Energy OOD"]
+        C3 --> C4["Classification (T-72/BMP-2/BTR-70)"]
+        C4 --> C5["Grad-CAM Saliency Heatmap"]
+    end
+
+    subgraph S4["4. Avionics Integration & Telemetry"]
+        direction TB
+        D1["MIL-STD-1553B BC/RT"] --> D2["Dual-Redundant Bus Interface"]
+        D2 --> D3["MIL-STD-882E FMEA Hazard Mitigation"]
+    end
+
+    A5 --> B1
+    B4 --> C1
+    C4 --> D1
 ```
 
 ### Key Quantitative Verification Metrics
@@ -77,9 +98,9 @@ EdgeSAR/
 ├── CONTRIBUTING.md                    # Engineering contribution and code style guide
 ├── Makefile                           # Root build automation (test, check, reproduce-all)
 ├── .github/workflows/ci.yml           # GitHub Actions CI matrix (Pytest + C Unity + Cppcheck)
-├── EdgeSAR_Scientific_Report.pdf      # 11-page publication-grade scientific report (LaTeX compiled)
-├── EdgeSAR_Scientific_Report.tex      # Academic LaTeX source code (IEEE / AIAA style)
-├── EdgeSAR_Detayli_Teknik_Rapor.docx  # Comprehensive Turkish technical & audit report (~433 KB)
+├── reports/                           # Academic publication deliverables
+│   ├── EdgeSAR_Scientific_Report_v2.pdf # 13-page publication-grade scientific report (LaTeX compiled)
+│   └── EdgeSAR_Scientific_Report_v2.tex # Academic LaTeX source code (IEEE / AIAA style)
 ├── requirements.txt                   # Python dependencies (NumPy, PyTorch, Matplotlib, Pytest)
 ├── run_rda.py                         # Module 1 CLI: Range-Doppler 2D image formation runner (real/synthetic)
 ├── train.py                           # Module 2 CLI: Ghost-ECANet training engine (supports --dataset mstar)
@@ -148,8 +169,9 @@ EdgeSAR/
 - Static analyzer: `cppcheck` (optional for local linting, runs in CI).
 
 ```bash
-# Clone and navigate to workspace
-cd C:\Users\TUNAHAN\Desktop\agy\EdgeSAR
+# Clone repository and navigate to workspace
+git clone https://github.com/TunahanSanal/EdgeSAR.git
+cd EdgeSAR
 
 # Install Python dependencies
 pip install -r requirements.txt
@@ -298,15 +320,15 @@ All identified audit findings from previous engineering reviews were resolved wi
 
 Comprehensive engineering reports and scientific manuscripts prepared for technical review and defense portfolio presentation:
 
-1. **Academic LaTeX Scientific Report (PDF)**:
-   - File: [`EdgeSAR_Scientific_Report.pdf`](EdgeSAR_Scientific_Report.pdf)
-   - Format: 11 pages, IEEE/AIAA style, LaTeX compiled with MiKTeX.
-   - Contents: Full theoretical physics derivations (LFM, POSP, RCMC kernel, CA-CFAR, Radix-2 FFT, Ghost-ECANet, ECA 1D conv, Grad-CAM XAI), 6 high-resolution diagnostic figures, full verification matrices, and defense avionics discussion.
+1. **Academic LaTeX Scientific Report v2 (PDF)**:
+   - File: [`reports/EdgeSAR_Scientific_Report_v2.pdf`](reports/EdgeSAR_Scientific_Report_v2.pdf)
+   - Format: 13 pages, IEEE/AIAA style, LaTeX compiled with MiKTeX (0 warnings, 0 overfull hboxes).
+   - Contents: Full theoretical physics derivations (LFM, POSP, RCMC kernel, CA-CFAR, Radix-2 FFT, Ghost-ECANet, ECA 1D conv, Grad-CAM XAI), 7 high-resolution diagnostic figures, empirical MSTAR evaluation (63.71% test acc, 65.60% CV), class weighting trade-off analysis, Free Energy OOD detection (AUROC 0.6500), and verification matrices.
 2. **LaTeX Manuscript Source**:
-   - File: [`EdgeSAR_Scientific_Report.tex`](EdgeSAR_Scientific_Report.tex)
-3. **Comprehensive Turkish Technical Report (Word)**:
-   - File: [`EdgeSAR_Detayli_Teknik_Rapor.docx`](EdgeSAR_Detayli_Teknik_Rapor.docx)
-   - Format: Complete step-by-step Turkish technical documentation (~433 KB), containing in-depth explanations of radar physics, C99 avionics implementation, deep neural network architecture, and audit cycles.
-4. **Experimental Results & Benchmark Report**:
+   - File: [`reports/EdgeSAR_Scientific_Report_v2.tex`](reports/EdgeSAR_Scientific_Report_v2.tex)
+3. **Experimental Results & Benchmark Report**:
    - File: [`docs/RESULTS.md`](docs/RESULTS.md)
-   - Format: Complete empirical evaluation of real Sandia MSTAR data, 5-fold cross validation, class breakdown, OOD analysis, robustness sweeps, and STM32 embedded benchmarks.
+   - Format: Complete empirical evaluation of real Sandia MSTAR data, 5-fold cross-validation, class breakdown, OOD analysis, robustness sweeps, and STM32 embedded benchmarks.
+4. **Engineering Scope & Technical Limitations**:
+   - Files: [`SCOPE.md`](SCOPE.md) & [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)
+   - Format: Formal boundary definition, non-goals, radar domain gap, and honest aerospace engineering disclosures.
