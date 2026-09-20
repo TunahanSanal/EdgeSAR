@@ -83,7 +83,7 @@
 \noindent\small
 Bu teknik rapor, tarafımca bireysel olarak geliştirilen \textbf{EdgeSAR} sisteminin sinyal işleme teorisini, derin öğrenme tabanlı otomatik hedef tanıma (ATR) mimarisini ve emniyet-kritik gömülü C çekirdeğini kapsamlı ampirik bulgularla sunmaktadır. EdgeSAR, ham radar faz geçmişinden havacılık veri yolu telemetrisine uzanan zinciri üç modülde birleştirir: (1) Ham I/Q faz geçmişini menzil göçü düzeltmesi (RCMC) ile 2B uzayda odaklayan \textbf{Modül 1 (Range-Doppler Algoritması)}; (2) 904,268 parametreli ($<2.0\text{M}$ bütçeli) ve hem sentetik simülasyon hem de gerçek \textbf{Sandia Ulusal Laboratuvarı X-band MSTAR} verisiyle doğrulanan \textbf{Modül 2 (Ghost-ECANet ATR \& Grad-CAM)}; (3) Sıfır dinamik bellekli (MISRA-C:2012 Kural 21.3) ve ARM Cortex-M4F mimarisi için deterministik döngü sınırlarına sahip \textbf{Modül 3 (Gömülü C / CA-CFAR / DMA)}. 
 
-Sistem dört turlu bağımsız denetim metodolojisinden geçmiş; doğrulanabilirlik ve şeffaflık temel ilke edinilmiştir. Gerçek MSTAR 17° $\to$ 15° standart test protokolünde model \textbf{\%63.71 genel doğruluk} ve \textbf{\%60.86 Makro F1} elde etmiş (T-72 tankında \%97.45 recall); 5-katmanlı tabakalı çapraz doğrulamada (5-Fold CV) \textbf{\%65.60 $\pm$ \%5.64} skoru yakalamıştır. Rapor, kapalı-küme softmax körlüğünü (AUROC 0.4607) serbest enerji tabanlı OOD skoruyla \textbf{AUROC 0.6500'e (+\%18.9)} çıkaran metodolojiyi, sınıf ağırlıklandırmadaki kritik T-72/BTR-70 ödünleşimini (trade-off) ve gömülü kodun mutasyon testleriyle kanıtlanmış sıfır-dinamik-bellek mimarisini şeffaf şekilde belgeler. Bu çalışma bir ticari ürün veya DO-178C akredite sertifikasyon iddiası taşımamakta; radar mühendisliği, derin öğrenme ve gömülü sistem disiplinlerini bir araya getiren savunulabilir bir açık kaynak mühendislik araştırması niteliğindedir.\\
+Sistem dört turlu bağımsız denetim metodolojisinden geçmiş; doğrulanabilirlik ve şeffaflık temel ilke edinilmiştir. Yayın sonrası kurulan sürekli entegrasyon (CI/CD) hattı da iki cross-platform hatayı gerçek zamanlı yakalayıp düzeltme fırsatı sunarak bu doğrulama disiplinini teyit etmiştir. Gerçek MSTAR 17° $\to$ 15° standart test protokolünde model \textbf{\%63.71 genel doğruluk} ve \textbf{\%60.86 Makro F1} elde etmiş (T-72 tankında \%97.45 recall); 5-katmanlı tabakalı çapraz doğrulamada (5-Fold CV) \textbf{\%65.60 $\pm$ \%5.64} skoru yakalamıştır. Rapor, kapalı-küme softmax körlüğünü (AUROC 0.4607) serbest enerji tabanlı OOD skoruyla \textbf{AUROC 0.6500'e (+\%18.9)} çıkaran metodolojiyi, sınıf ağırlıklandırmadaki kritik T-72/BTR-70 ödünleşimini (trade-off) ve gömülü kodun mutasyon testleriyle kanıtlanmış sıfır-dinamik-bellek mimarisini şeffaf şekilde belgeler. Bu çalışma bir ticari ürün veya DO-178C akredite sertifikasyon iddiası taşımamakta; radar mühendisliği, derin öğrenme ve gömülü sistem disiplinlerini bir araya getiren savunulabilir bir açık kaynak mühendislik araştırması niteliğindedir.\\
 
 \noindent\small\textbf{Anahtar Kelimeler:} Sentetik Açıklıklı Radar (SAR), Range-Doppler Algoritması (RDA), Sandia MSTAR, Ghost-ECANet, Out-of-Distribution (OOD), Free Energy Score, CA-CFAR, MISRA-C:2012, WCET Projeksiyonu.
 \end{abstract}
@@ -424,9 +424,21 @@ Tur 3 & \texttt{v0.3-audited} & Sandia MSTAR gerçek veri entegrasyonu (\%63.71 
 Tur 4 (A/B/C) & \texttt{v0.4-phase-c} & Sınıf ağırlıklandırma trade-off'u, serbest enerji OOD (AUROC 0.6500) ve 23 test. & Doğrulandı. \\
 Rötuş \& Temizlik & \texttt{v0.4.2-polish} & Checkpoint/retrain şeffaflığı, malloc-guard \texttt{stm32\_port} genişletmesi ve CI senkronu. & 23/23 Pytest, 13/13 Unity Yeşil. \\
 \textbf{Nihai Rapor} & \textbf{\texttt{v1.0-report}} & LinkedIn paylaşıma hazır güncel bilimsel ve deneysel rapor (v2). & \textbf{Yayında}. \\
+CI/CD Doğrulama & \texttt{v1.1-ci-fixed} & GitHub Actions canlı pipeline'ı iki gerçek cross-platform hatayı (eksik Python tip importu, Linux GNU ld bağlayıcı sıra kuralı) yakaladı; ikisi de şeffaf şekilde düzeltildi, tüm işler (23 test, 13 Unity, Cppcheck, WCET derlemesi) yeşile döndü. & Doğrulandı, canlı. \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\textbf{Sürekli Entegrasyon (CI/CD) ile Ek Doğrulama:} Proje GitHub'a taşındıktan sonra, kurulan
+GitHub Actions iş hattı ilk çalıştırmasında iki gerçek hata tespit etmiştir: (1) \texttt{train.py}
+içinde geliştirme ortamında fark edilmeyen, yalnızca temiz bir Python yorumlayıcısında ortaya çıkan
+eksik bir \texttt{typing.Optional} içe aktarımı; (2) Windows/MinGW ortamında sorun çıkarmayan ancak
+Linux'un GNU \texttt{ld} bağlayıcısının tek-yönlü sembol çözümleme kuralı nedeniyle \texttt{-lm}
+matematik kütüphanesi bayrağının komut sırasına duyarlı olduğu bir gömülü C derleme hatası. Her iki
+sorun da tespit edildiği gün içinde düzeltilmiş, düzeltmeler commit geçmişine işlenmiş ve pipeline
+\texttt{v1.1-ci-fixed} etiketiyle tamamen yeşile dönmüştür. Bu olay, raporun ana ilkesini
+doğrulamaktadır: iddialar tek bir geliştirme ortamına değil, bağımsız ve tekrarlanabilir otomatik
+doğrulamaya dayanmalıdır.
 
 \textbf{Genel Güven Skoru: 9/10}  
 Denetim süreci sonunda projeye verilen 9/10 güven skoru; iddiaların arkasında durulduğunu, ancak fiziksel STM32 kartı üzerindeki donanım içi DWT ölçümlerinin henüz tamamlanmamış olmasını ve MSTAR eğitiminde seed'e bağlı varyansı dürüstçe yansıtmaktadır.
