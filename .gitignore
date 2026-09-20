@@ -8,16 +8,18 @@ __pycache__/
 .coverage
 htmlcov/
 
-# C / Embedded build artifacts
+# C / Embedded build artifacts (recursive across all subdirectories)
 *.o
 *.obj
 *.exe
 *.elf
 *.bin
 *.hex
-modules/module3_embedded/test_runner.exe
-modules/module3_embedded/stm32_port/src/benchmark_test.exe
-benchmark_wcet.exe
+*.a
+*.lib
+*.d
+build/
+.pio/
 
 # LaTeX temporary files
 *.aux
