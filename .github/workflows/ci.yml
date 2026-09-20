@@ -31,8 +31,8 @@ jobs:
       - name: Verify WCET benchmark builds
         run: |
           cd modules/module3_embedded/stm32_port
-          gcc -Wall -Wextra -pedantic -std=c99 -O2 -I../include -lm \
-            -o benchmark_wcet src/benchmark_wcet.c ../src/fft_mock.c ../src/cfar_detector.c
+          gcc -Wall -Wextra -pedantic -std=c99 -O2 -I../include \
+            -o benchmark_wcet src/benchmark_wcet.c ../src/fft_mock.c ../src/cfar_detector.c -lm
           ./benchmark_wcet
 
   embedded-c-tests:

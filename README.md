@@ -1,53 +1,53 @@
-# EdgeSAR: End-to-End Embedded SAR Target Recognition & Signal Processing System
+# EdgeSAR: Uçtan Uca Gömülü SAR Hedef Tanıma ve Sinyal İşleme Sistemi
 
-> **Durum:** Aktif geliştirilen bireysel araştırma/portföy projesidir. Sürüm kontrolü (Git) baseline'ı kurulmuş, 3 turlu bağımsız denetimden geçmiş ve etiketlenmiştir (v0.3-audited / v0.4-phase-c). Ticari/akredite sertifikasyon (DO-178C, MISRA, MIL-STD) iddiası taşımamaktadır; bu standartlar mimari kılavuz olarak referans alınmıştır. WCET doğrulaması host x86_64 üzerinde teorik projeksiyonla yapılmış olup fiziksel STM32F407 Discovery kartı temin edildiğinde donanımda tekrarlanacaktır. Sentetik ve gerçek veri (MSTAR) sonuçları ayrı ayrı raporlanmıştır. Detaylar için [SCOPE.md](SCOPE.md) ve [docs/LIMITATIONS.md](docs/LIMITATIONS.md) dosyalarına bakınız.
+> **Durum:** Aktif geliştirilen bireysel araştırma/portföy projesidir. Sürüm kontrolü (Git) baseline'ı kurulmuş, 4 turlu bağımsız denetimden geçmiş ve etiketlenmiştir (v0.3-audited / v0.4-phase-c / v0.4.1-cleanup / v0.4.2-polish / v1.0-report). Ticari/akredite sertifikasyon (DO-178C, MISRA, MIL-STD) iddiası taşımamaktadır; bu standartlar mimari kılavuz olarak referans alınmıştır. WCET doğrulaması host x86_64 üzerinde teorik projeksiyonla yapılmış olup fiziksel STM32F407 Discovery kartı temin edildiğinde donanımda tekrarlanacaktır. Sentetik ve gerçek veri (MSTAR) sonuçları ayrı ayrı raporlanmıştır. Detaylar için [SCOPE.md](SCOPE.md) ve [docs/LIMITATIONS.md](docs/LIMITATIONS.md) dosyalarına bakınız.
 
-[![CI Build](https://github.com/TunahanSanal/EdgeSAR/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
-[![Pytest](https://img.shields.io/badge/Pytest-23%2F23%20Passing-brightgreen.svg)](tests/)
-[![Unity C](https://img.shields.io/badge/Unity%20C-13%2F13%20Passing-brightgreen.svg)](modules/module3_embedded/tests/)
-[![MISRA-C:2012](https://img.shields.io/badge/MISRA--C:2012-0%20Defects-success.svg)](modules/module3_embedded/)
-[![MSTAR Test Acc](https://img.shields.io/badge/MSTAR%20Test%20Acc-63.71%25%20(Real)-blue.svg)](docs/RESULTS.md)
-[![MSTAR 5--Fold CV](https://img.shields.io/badge/MSTAR%205--Fold%20CV-65.60%25%20±%205.64%25-blue.svg)](docs/RESULTS.md)
-[![Synthetic F1](https://img.shields.io/badge/Synthetic%20F1-100.00%25%20(Toy)-lightgrey.svg)](eval_results/f1_metrics.txt)
-[![Parameters](https://img.shields.io/badge/Model%20Size-904K%20%28%3C2M%29-brightgreen.svg)](modules/module2_atr/)
-[![Estimated WCET](https://img.shields.io/badge/Est.%20WCET-~0.38%20ms%20%28Theoretical%29-brightgreen.svg)](modules/module3_embedded/stm32_port/)
-[![Scientific Report](https://img.shields.io/badge/Scientific%20Report-13%20Pages%20PDF-purple.svg)](reports/EdgeSAR_Scientific_Report_v2.pdf)
+[![CI Derlemesi](https://github.com/TunahanSanal/EdgeSAR/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
+[![Pytest](https://img.shields.io/badge/Pytest-23%2F23%20Geçti-brightgreen.svg)](tests/)
+[![Unity C](https://img.shields.io/badge/Unity%20C-13%2F13%20Geçti-brightgreen.svg)](modules/module3_embedded/tests/)
+[![MISRA-C:2012](https://img.shields.io/badge/MISRA--C:2012-0%20Hata-success.svg)](modules/module3_embedded/)
+[![MSTAR Test Doğruluğu](https://img.shields.io/badge/MSTAR%20Test%20Doğruluğu-%2563.71%20(Gerçek)-blue.svg)](docs/RESULTS.md)
+[![MSTAR 5-Katmanlı ÇD](https://img.shields.io/badge/MSTAR%205--Katmanlı%20ÇD-%2565.60%20±%20%255.64-blue.svg)](docs/RESULTS.md)
+[![Sentetik F1](https://img.shields.io/badge/Sentetik%20F1-%25100.00%20(Toy)-lightgrey.svg)](eval_results/f1_metrics.txt)
+[![Model Boyutu](https://img.shields.io/badge/Model%20Boyutu-904K%20%28%3C2M%29-brightgreen.svg)](modules/module2_atr/)
+[![Tahmini WCET](https://img.shields.io/badge/Tahmini%20WCET-~0.38%20ms%20%28Teorik%29-brightgreen.svg)](modules/module3_embedded/stm32_port/)
+[![Bilimsel Rapor](https://img.shields.io/badge/Bilimsel%20Rapor-13%20Sayfa%20PDF-purple.svg)](reports/EdgeSAR_Scientific_Report_v2.pdf)
 
 ---
 
-## 1. Executive Summary & Mission Pipeline
+## 1. Yönetici Özeti ve Görev Akış Hattı
 
-**EdgeSAR** is an end-to-end, zero-black-box Synthetic Aperture Radar (SAR) processing, target recognition, and embedded flight-avionics software suite. It bridges raw electromagnetic signal processing, parameter-efficient deep learning Automatic Target Recognition (ATR) with Explainable AI (XAI), safety-critical bare-metal embedded C preprocessing inspired by **DO-178C Level B** and **MISRA-C:2012** guidelines, and aerospace bus systems integration (**MIL-STD-1553B** and **MIL-STD-882E**).
+**EdgeSAR**, yapay açıklıklı radar (SAR) sinyal işleme, hedef tanıma ve gömülü uçuş aviyoniği yazılımını birleştiren uçtan uca, kapalı kutu barındırmayan (zero-black-box) bir mühendislik paketidir. Sistem; ham elektromanyetik sinyal işlemeyi, parametre-verimli derin öğrenme tabanlı Otomatik Hedef Tanıma (ATR) ve Açıklanabilir Yapay Zekâyı (XAI), **DO-178C Level B** ve **MISRA-C:2012** yönergelerinden esinlenen emniyet-kritik bare-metal gömülü C ön işlemeyi ve havacılık veri yolu entegrasyonunu (**MIL-STD-1553B** ve **MIL-STD-882E**) tek bir mimaride buluşturur.
 
 ```mermaid
 flowchart LR
-    subgraph S1["1. Raw Signal Processing (RDA)"]
+    subgraph S1["1. Ham Sinyal İşleme (RDA)"]
         direction TB
-        A1["Raw Chirp I/Q Echo"] --> A2["Range Matched Filter"]
-        A2 --> A3["Range Cell Migration (RCMC)"]
-        A3 --> A4["Azimuth Matched Filter"]
-        A4 --> A5["2D Focused SAR Image"]
+        A1["Ham Chirp I/Q Yankısı"] --> A2["Menzil Uyumlu Filtresi"]
+        A2 --> A3["Menzil Göç Düzeltme (RCMC)"]
+        A3 --> A4["Azimut Uyumlu Filtresi"]
+        A4 --> A5["2B Odaklanmış SAR Görüntüsü"]
     end
 
-    subgraph S2["2. Embedded C Core (MISRA-C / Zero-Heap)"]
+    subgraph S2["2. Gömülü C Çekirdeği (MISRA-C / Sıfır Yığın)"]
         direction TB
         B1["Ping-Pong DMA HAL"] --> B2["Radix-2 DIT FFT"]
-        B2 --> B3["CA-CFAR Target Detection"]
-        B3 --> B4["Target ROI Bounding Box"]
+        B2 --> B3["CA-CFAR Hedef Tespiti"]
+        B3 --> B4["Hedef İÇB Sınırlayıcı Kutu"]
     end
 
-    subgraph S3["3. Deep ATR & Explainable AI (Ghost-ECANet)"]
+    subgraph S3["3. Derin ATR ve Açıklanabilir YZ (Ghost-ECANet)"]
         direction TB
-        C1["SAR Chip (64x64)"] --> C2["Ghost Convolutions (<2M)"]
-        C2 --> C3["ECA Attention & Free Energy OOD"]
-        C3 --> C4["Classification (T-72/BMP-2/BTR-70)"]
-        C4 --> C5["Grad-CAM Saliency Heatmap"]
+        C1["SAR Çipi (64x64)"] --> C2["Ghost Evrişimleri (<2M)"]
+        C2 --> C3["ECA Dikkat ve Serbest Enerji OOD"]
+        C3 --> C4["Sınıflandırma (T-72/BMP-2/BTR-70)"]
+        C4 --> C5["Grad-CAM Belirginlik Isı Haritası"]
     end
 
-    subgraph S4["4. Avionics Integration & Telemetry"]
+    subgraph S4["4. Aviyonik Entegrasyon ve Telemetri"]
         direction TB
-        D1["MIL-STD-1553B BC/RT"] --> D2["Dual-Redundant Bus Interface"]
-        D2 --> D3["MIL-STD-882E FMEA Hazard Mitigation"]
+        D1["MIL-STD-1553B BC/RT"] --> D2["Çift Yedekli Veri Yolu Arayüzü"]
+        D2 --> D3["MIL-STD-882E FMEA Tehlike Azaltma"]
     end
 
     A5 --> B1
@@ -55,25 +55,25 @@ flowchart LR
     C4 --> D1
 ```
 
-### Key Quantitative Verification Metrics
+### Temel Nicel Doğrulama Metrikleri
 
-| Performance Metric | Design Specification | Verified In-System | Data Source / Environment | Status |
+| Performans Metriği | Tasarım Spesifikasyonu | Sistem İçi Doğrulanan | Veri Kaynağı / Ortam | Durum |
 |---|:---:|:---:|:---:|:---:|
-| **Range Resolution ($\Delta r$)** | $< 4.00\text{ m}$ | **$3.75\text{ m}$** | Synthetic Point Targets | **PASSED** |
-| **Azimuth Resolution ($\Delta a$)** | $< 2.00\text{ m}$ | **$1.05\text{ m}$** | Synthetic Point Targets | **PASSED** |
-| **Range Peak Sidelobe Ratio (PSLR)** | $\le -40.0\text{ dB}$ | **$-42.23\text{ dB}$** (Local) | Hamming Windowed Chirp | **PASSED** |
-| **Azimuth Peak Sidelobe Ratio (PSLR)** | $\le -28.0\text{ dB}$ | **$-31.05\text{ dB}$** (Local) | Hamming Windowed Azimuth | **PASSED** |
-| **Real SAR Image Entropy** | Minimum Entropy | **12.05 nats** (Contrast: 1.01) | Simulated Sentinel-1-style Scene | **PASSED** |
-| **Deep ATR Parameter Budget** | $< 2,000,000$ | **904,268** parameters | PyTorch Model (45.2% budget) | **PASSED** |
-| **Target Acc (Real MSTAR 17° $\to$ 15°)** | Baseline ($> 60.0\%$) | **63.71%** (Macro F1: 60.86%) | Sandia MSTAR Benchmark (587 test) | **PASSED** |
-| **MSTAR 5-Fold Stratified CV** | Statistical Stability | **65.60% ± 5.64%** | Sandia MSTAR (1,285 chips) | **PASSED** |
-| **Target F1 (Synthetic Benchmark)** | Toy Verification | **100.00%** | Synthetic Scatterer Simulator | **PASSED** |
-| **Calibration Error (ECE)** | $< 15.0\%$ | **9.53%** (ECE = 0.0953) | Real MSTAR Evaluation | **PASSED** |
-| **Embedded C Memory Safety** | Zero Heap (`malloc` prohibited) | **0 Bytes Dynamic Memory** | MISRA-C:2012 Rule 21.3 | **PASSED** |
-| **Estimated Execution Time (WCET)** | $< 25.0\text{ ms}$ mission limit | **~0.38 ms estimated WCET** | Cortex-M4F @ 168 MHz theoretical projection; host-timed | **PASSED** |
-| **Automated Test Pyramid** | 100% Pass Rate | **23 / 23 Pytest Passing** | Unit, Property, Integration, Regr | **PASSED** |
-| **Embedded Unit Tests (Unity)** | 100% Coverage | **13 / 13 Passing (0 Failures)**| Bare-Metal C Harness | **PASSED** |
-| **Static Code Analysis** | MISRA-C Compliant | **0 Defects / 0 Warnings** | Cppcheck `--enable=all` | **PASSED** |
+| **Menzil Çözünürlüğü ($\Delta r$)** | $< 4.00\text{ m}$ | **$3.75\text{ m}$** | Sentetik Nokta Hedefler | **GEÇTİ** |
+| **Azimut Çözünürlüğü ($\Delta a$)** | $< 2.00\text{ m}$ | **$1.05\text{ m}$** | Sentetik Nokta Hedefler | **GEÇTİ** |
+| **Menzil Yan Hüzme Bastırma Oranı (PSLR)** | $\le -40.0\text{ dB}$ | **$-42.23\text{ dB}$** (Yerel) | Hamming Pencereli Chirp | **GEÇTİ** |
+| **Azimut Yan Hüzme Bastırma Oranı (PSLR)** | $\le -28.0\text{ dB}$ | **$-31.05\text{ dB}$** (Yerel) | Hamming Pencereli Azimut | **GEÇTİ** |
+| **Gerçek SAR Görüntü Entropisi** | Minimum Entropi | **12.05 nats** (Kontrast: 1.01) | Benzetimli Sentinel-1 Benzeri Sahne | **GEÇTİ** |
+| **Derin ATR Parametre Bütçesi** | $< 2.000.000$ | **904.268** parametre | PyTorch Modeli (%45.2 bütçe kullanımı) | **GEÇTİ** |
+| **Hedef Doğruluğu (Gerçek MSTAR 17° $\to$ 15°)** | Temel Çizgi ($> \%60.0$) | **%63.71** (Makro F1: %60.86) | Sandia MSTAR Kıyaslaması (587 test çipi) | **GEÇTİ** |
+| **MSTAR 5-Katmanlı Tabakalı ÇD** | İstatistiksel Kararlılık | **%65.60 ± %5.64** | Sandia MSTAR (1.285 çip) | **GEÇTİ** |
+| **Hedef F1 (Sentetik Kıyaslama)** | Sentetik Doğrulama | **%100.00** | Sentetik Saçıcı Simülatörü (675 çip) | **GEÇTİ** |
+| **Kalibrasyon Hatası (ECE)** | $< \%15.0$ | **%9.53** (ECE = 0.0953) | Gerçek MSTAR Değerlendirmesi | **GEÇTİ** |
+| **Gömülü C Bellek Güvenliği** | Sıfır Yığın (`malloc` yasak) | **0 Bayt Dinamik Bellek** | MISRA-C:2012 Kural 21.3 | **GEÇTİ** |
+| **Tahmini Çalışma Süresi (WCET)** | $< 25.0\text{ ms}$ görev sınırı | **~0.38 ms tahmini WCET** | Cortex-M4F @ 168 MHz teorik projeksiyonu; host ölçümlü | **GEÇTİ** |
+| **Otomatik Test Piramidi** | %100 Başarı Oranı | **23 / 23 Pytest Geçti** | Birim, Özellik, Entegrasyon, Regresyon | **GEÇTİ** |
+| **Gömülü Birim Testleri (Unity)** | %100 Kapsama | **13 / 13 Geçti (0 Hata)** | Bare-Metal C Test Altyapısı | **GEÇTİ** |
+| **Statik Kod Analizi** | MISRA-C Uyumlu | **0 Kusur / 0 Uyarı** | Cppcheck `--enable=all` | **GEÇTİ** |
 
 > **Not (tekrarlanabilirlik):** Yukarıdaki %63.71 doğruluk, repoda commit'li `best_mstar_model.pth`
 > checkpoint'ine aittir ve `python scripts/evaluate_mstar_comprehensive.py` ile birebir yeniden üretilebilir.
@@ -82,165 +82,165 @@ flowchart LR
 > sabit checkpoint'e dayanır; `--retrain` sonuçları ayrıca `docs/RESULTS.md`'de not düşülmüştür.
 
 > [!NOTE]
-> Detailed numerical breakdowns, confusion matrices, ROC/PR curves, OOD analyses, and robustness sweeps are fully documented in [`docs/RESULTS.md`](docs/RESULTS.md).
+> Ayrıntılı sayısal dökümler, karışıklık matrisleri, ROC/PR eğrileri, OOD analizleri ve dayanıklılık taramaları [`docs/RESULTS.md`](docs/RESULTS.md) dosyasında eksiksiz olarak belgelenmiştir.
 
 ---
 
-## 2. Architecture & Modules
+## 2. Mimari ve Modüller
 
-The repository is structured into modular, decoupled engineering subsystems:
+Depo, modüler ve birbirinden bağımsız mühendislik alt sistemlerine ayrılmıştır:
 
 ```
 EdgeSAR/
-├── SCOPE.md                           # Project scope statement & non-goals
-├── README.md                          # Root system narrative & reproducibility guide
-├── LICENSE                            # MIT Open Source License
-├── CONTRIBUTING.md                    # Engineering contribution and code style guide
-├── Makefile                           # Root build automation (test, check, reproduce-all)
-├── .github/workflows/ci.yml           # GitHub Actions CI matrix (Pytest + C Unity + Cppcheck)
-├── reports/                           # Academic publication deliverables
-│   ├── EdgeSAR_Scientific_Report_v2.pdf # 13-page publication-grade scientific report (LaTeX compiled)
-│   └── EdgeSAR_Scientific_Report_v2.tex # Academic LaTeX source code (IEEE / AIAA style)
-├── requirements.txt                   # Python dependencies (NumPy, PyTorch, Matplotlib, Pytest)
-├── run_rda.py                         # Module 1 CLI: Range-Doppler 2D image formation runner (real/synthetic)
-├── train.py                           # Module 2 CLI: Ghost-ECANet training engine (supports --dataset mstar)
-├── evaluate.py                        # Module 2 CLI: Confusion matrix, class F1, & Grad-CAM runner
-├── scripts/                           # Engineering scripts & loaders
-│   ├── mstar_loader.py                # Sandia MSTAR benchmark loader with NPZ memory cache & 5-fold CV
-│   ├── sar_real_loader.py             # Real/open SAR complex scene loader & focus metrics (Entropy, Contrast)
-│   └── evaluate_mstar_comprehensive.py# MSTAR comprehensive evaluation (CV, ROC, PR, ECE, OOD, robustness)
-├── data/                              # Dataset repositories & data cards
-│   ├── mstar/                         # Sandia MSTAR benchmark chips (17° train, 15° test, OOD)
-│   │   ├── DATA_CARD.md               # Sandia MSTAR dataset specifications & collection geometry
-│   │   └── LICENSE_NOTES.md           # Public release attribution notes
-│   ├── open_sar/                      # Open civilian SAR scenes (Sentinel-1 SLC style)
-│   │   └── DATA_CARD.md               # Sentinel-1 SLC characteristics & focus criteria
-│   └── synthetic/                     # Synthetic attributed scatterer dataset
-│       └── DATA_CARD.md               # Physics point scatterer parameters
+├── SCOPE.md                           # Proje kapsam beyanı ve kapsam dışı hedefler
+├── README.md                          # Kök sistem anlatımı ve tekrarlanabilirlik kılavuzu
+├── LICENSE                            # MIT Açık Kaynak Lisansı
+├── CONTRIBUTING.md                    # Mühendislik katkı ve kod stili kılavuzu
+├── Makefile                           # Kök derleme otomasyonu (test, check, reproduce-all)
+├── .github/workflows/ci.yml           # GitHub Actions CI matrisi (Pytest + C Unity + Cppcheck)
+├── reports/                           # Akademik yayın ve rapor çıktıları
+│   ├── EdgeSAR_Scientific_Report_v2.pdf # 13 sayfalık yayın kalitesinde bilimsel rapor (LaTeX derlenmiş)
+│   └── EdgeSAR_Scientific_Report_v2.tex # Akademik LaTeX kaynak kodu (IEEE / AIAA stili)
+├── requirements.txt                   # Python bağımlılıkları (NumPy, PyTorch, Matplotlib, Pytest)
+├── run_rda.py                         # Modül 1 CLI: Range-Doppler 2B görüntü oluşturma çalıştırıcısı (gerçek/sentetik)
+├── train.py                           # Modül 2 CLI: Ghost-ECANet eğitim motoru (--dataset mstar destekli)
+├── evaluate.py                        # Modül 2 CLI: Karışıklık matrisi, sınıf F1 ve Grad-CAM çalıştırıcısı
+├── scripts/                           # Mühendislik betikleri ve veri yükleyicileri
+│   ├── mstar_loader.py                # Sandia MSTAR kıyaslama yükleyicisi (NPZ bellek önbelleği ve 5-katlı CV)
+│   ├── sar_real_loader.py             # Gerçek/açık SAR karmaşık sahne yükleyicisi ve odak metrikleri (Entropi, Kontrast)
+│   └── evaluate_mstar_comprehensive.py# MSTAR kapsamlı değerlendirmesi (CV, ROC, PR, ECE, OOD, dayanıklılık)
+├── data/                              # Veri seti depoları ve veri kartları
+│   ├── mstar/                         # Sandia MSTAR kıyaslama çipleri (17° eğitim, 15° test, OOD)
+│   │   ├── DATA_CARD.md               # Sandia MSTAR veri seti özellikleri ve toplama geometrisi
+│   │   └── LICENSE_NOTES.md           # Kamu erişimi atıf notları
+│   ├── open_sar/                      # Açık sivil SAR sahneleri (Sentinel-1 SLC stili)
+│   │   └── DATA_CARD.md               # Sentinel-1 SLC özellikleri ve odak kriterleri
+│   └── synthetic/                     # Sentetik öznitelikli saçıcı veri seti
+│       └── DATA_CARD.md               # Fizik tabanlı nokta saçıcı parametreleri
 ├── modules/
-│   ├── module1_rda/                   # Raw SAR Signal Processing (Range-Doppler Algorithm)
-│   │   ├── rda_pipeline.py            # First-principles RDA (Range compression, RCMC, Azimuth focus)
-│   │   ├── synthetic_generator.py     # Physics-based point-scatterer radar echo simulator
-│   │   └── README.md                  # Theoretical derivations & "Neden Böyle Yaptım?" defense
-│   ├── module2_atr/                   # Automatic Target Recognition & Explainable AI (XAI)
-│   │   ├── model.py                   # Ghost-ECANet CNN architecture (904,268 parameters < 2M)
-│   │   ├── dataset.py                 # Attributed scattering center generator & SAR dataset
-│   │   ├── gradcam.py                 # Grad-CAM engine from scratch (hooks & colormap overlay)
-│   │   └── README.md                  # Architectural trade-offs & "Neden Böyle Yaptım?" defense
-│   └── module3_embedded/              # Safety-Critical Embedded Preprocessing (C / HAL)
-│       ├── include/                   # Public headers: cfar_detector.h, hal_sar_mock.h, fft_mock.h
-│       ├── src/                       # MISRA-C implementations: cfar_detector.c, hal_sar_mock.c, fft_mock.c
-│       ├── tests/                     # Unity test harness: test_cfar.c, test_hal.c, test_fft.c, test_runner.c
-│       ├── stm32_port/                # Hardware-in-the-Loop STM32F407 port & WCET benchmarks
-│       │   ├── platformio.ini         # PlatformIO STM32F4 Discovery target configuration
-│       │   ├── src/main_stm32.c       # Bare-metal main loop with DWT cycle counter & ping-pong DMA
-│       │   ├── src/benchmark_wcet.c   # Deterministic WCET & numerical accuracy benchmark runner
-│       │   └── README.md              # STM32 porting guide & cycle count analysis
-│       ├── Makefile                   # Strict host compilation (-Wall -Wextra -pedantic -Werror -Wshadow)
-│       └── CMakeLists.txt             # Cross-platform CMake build configuration
-├── tests/                             # Automated test pyramid (23 tests passing)
-│   ├── test_rda.py                    # Unit: Impulse response, RCMC straightening, resolution, invariants
-│   ├── test_atr.py                    # Unit: Parameters < 2M, forward shapes, Grad-CAM, dataset
-│   ├── test_integration.py            # Integration: Raw Echo -> RDA -> CFAR -> ATR -> MIL-STD-1553B
-│   ├── test_property.py               # Property-based: Parseval conservation, shift invariance, CFAR linearity
-│   └── test_regression.py             # Regression: Parameter budget, zero-heap safety, resolution bounds
-├── docs/                              # Aerospace Systems Engineering & Defense Documentation
-│   ├── SCOPE.md                       # Formal scope statement & dual-use civil applications
-│   ├── LIMITATIONS.md                 # Technical limitations, domain gap, and engineering constraints
-│   ├── RESULTS.md                     # Comprehensive experimental results on real MSTAR & open SAR
-│   ├── DATA_CARDS.md                  # Unified dataset documentation (MSTAR, Sentinel-1, Synthetic)
-│   ├── SRD.md                         # Software Requirements Document (REQ-001 to REQ-008)
-│   ├── RTM.md                         # Bidirectional Requirements Traceability Matrix (Version 2.0.0)
-│   ├── architecture.md                # C4-style block & sequence diagrams (Mermaid)
-│   ├── mil_std_1553b.md               # 1-page MIL-STD-1553B bus scheduling & subaddress interface spec
-│   └── mil_std_882e_fmea.md           # MIL-STD-882E FMEA Hazard Risk Assessment Matrix
-├── checkpoints/                       # Saved ATR model weights (best_mstar_model.pth, best_model.pth)
-├── output_rda/                        # Generated 2D SAR diagnostic figures & metrics.json
-└── eval_results/                      # Comprehensive ATR evaluation deliverables (ROC, PR, ECE, OOD, Grad-CAM)
+│   ├── module1_rda/                   # Ham SAR Sinyal İşleme (Range-Doppler Algoritması)
+│   │   ├── rda_pipeline.py            # Temel ilkelerden RDA (Menzil sıkıştırma, RCMC, Azimut odaklama)
+│   │   ├── synthetic_generator.py     # Fizik tabanlı nokta saçıcı radar yankı simülatörü
+│   │   └── README.md                  # Teorik çıkarımlar ve "Neden Böyle Yaptım?" savunması
+│   ├── module2_atr/                   # Otomatik Hedef Tanıma ve Açıklanabilir Yapay Zeka (ATR / XAI)
+│   │   ├── model.py                   # Ghost-ECANet CNN mimarisi (904.268 parametre < 2M)
+│   │   ├── dataset.py                 # Öznitelikli saçılma merkezi üreteci ve SAR veri seti
+│   │   ├── gradcam.py                 # Sıfırdan Grad-CAM motoru (kancalar ve ısı haritası bindirme)
+│   │   └── README.md                  # Mimari ödünleşimler ve "Neden Böyle Yaptım?" savunması
+│   └── module3_embedded/              # Güvenlik Kritik Gömülü Ön İşleme (C / HAL)
+│       ├── include/                   # Genel başlıklar: cfar_detector.h, hal_sar_mock.h, fft_mock.h
+│       ├── src/                       # MISRA-C uyumlu uygulamalar: cfar_detector.c, hal_sar_mock.c, fft_mock.c
+│       ├── tests/                     # Unity test çatısı: test_cfar.c, test_hal.c, test_fft.c, test_runner.c
+│       ├── stm32_port/                # Donanım Döngüsünde (HIL) STM32F407 portu ve WCET testleri
+│       │   ├── platformio.ini         # PlatformIO STM32F4 Discovery hedef konfigürasyonu
+│       │   ├── src/main_stm32.c       # DWT çevrim sayacı ve ping-pong DMA içeren yalın donanım ana döngüsü
+│       │   ├── src/benchmark_wcet.c   # Deterministik WCET ve sayısal doğruluk kıyaslama çalıştırıcısı
+│       │   └── README.md              # STM32 port kılavuzu ve çevrim sayısı analizi
+│       ├── Makefile                   # Katı derleme kuralları (-Wall -Wextra -pedantic -Werror -Wshadow)
+│       └── CMakeLists.txt             # Çapraz platform CMake derleme konfigürasyonu
+├── tests/                             # Otomatik test piramidi (23 test geçiyor)
+│   ├── test_rda.py                    # Birim: Dürtü yanıtı, RCMC eğrilik düzeltme, çözünürlük, değişmezler
+│   ├── test_atr.py                    # Birim: Parametreler < 2M, ileri geçiş şekilleri, Grad-CAM, veri seti
+│   ├── test_integration.py            # Entegrasyon: Ham Yankı -> RDA -> CFAR -> ATR -> MIL-STD-1553B
+│   ├── test_property.py               # Özellik tabanlı: Parseval korunumu, öteleme değişmezliği, CFAR doğrusallığı
+│   └── test_regression.py             # Regresyon: Parametre bütçesi, sıfır yığın güvenliği, çözünürlük sınırları
+├── docs/                              # Havacılık Sistem Mühendisliği ve Savunma Dokümantasyonu
+│   ├── SCOPE.md                       # Resmi kapsam beyanı ve çift kullanımlı sivil uygulamalar
+│   ├── LIMITATIONS.md                 # Teknik kısıtlamalar, alan farkı (domain gap) ve mühendislik sınırları
+│   ├── RESULTS.md                     # Gerçek MSTAR ve açık SAR üzerinde kapsamlı deneysel sonuçlar
+│   ├── DATA_CARDS.md                  # Birleşik veri seti dokümantasyonu (MSTAR, Sentinel-1, Sentetik)
+│   ├── SRD.md                         # Yazılım Gereksinimleri Dokümanı (REQ-001 - REQ-008)
+│   ├── RTM.md                         # Çift Yönlü Gereksinim İzlenebilirlik Matrisi (Sürüm 2.0.0)
+│   ├── architecture.md                # C4 stili blok ve ardışıl diyagramlar (Mermaid)
+│   ├── mil_std_1553b.md               # 1 sayfalık MIL-STD-1553B veri yolu zamanlama ve alt adres arayüz özellikleri
+│   └── mil_std_882e_fmea.md           # MIL-STD-882E FMEA Tehlike Risk Değerlendirme Matrisi
+├── checkpoints/                       # Kaydedilmiş ATR model ağırlıkları (best_mstar_model.pth, best_model.pth)
+├── output_rda/                        # Üretilen 2B SAR tanı grafikleri ve metrics.json
+└── eval_results/                      # Kapsamlı ATR değerlendirme çıktıları (ROC, PR, ECE, OOD, Grad-CAM)
 ```
 
 ---
 
-## 3. Quickstart & Reproducibility Instructions
+## 3. Hızlı Başlangıç ve Tekrarlanabilirlik Kılavuzu
 
-### Prerequisites
-- Python $\ge 3.9$ with `numpy`, `torch`, `matplotlib`, and `pytest`.
-- C compiler (`gcc` or `clang`) with `mingw32-make` / `make`.
-- Static analyzer: `cppcheck` (optional for local linting, runs in CI).
+### Ön Gereksinimler
+- Python $\ge 3.9$ (`numpy`, `torch`, `matplotlib` ve `pytest` ile).
+- C derleyicisi (`gcc` veya `clang`) ve `mingw32-make` / `make`.
+- Statik kod analizcisi: `cppcheck` (yerel analiz için isteğe bağlı, CI üzerinde çalışır).
 
 ```bash
-# Clone repository and navigate to workspace
+# Depoyu klonlayın ve çalışma dizinine geçin
 git clone https://github.com/TunahanSanal/EdgeSAR.git
 cd EdgeSAR
 
-# Install Python dependencies
+# Python bağımlılıklarını kurun
 pip install -r requirements.txt
 ```
 
 ---
 
-### Step 1: Raw SAR Signal Processing (Module 1 - RDA)
-Run first-principles Range-Doppler focusing on **simulated civilian SAR scene** (Sentinel-1-style K-distributed):
+### Adım 1: Ham SAR Sinyal İşleme (Modül 1 - RDA)
+**Simüle edilmiş sivil SAR sahnesi** (Sentinel-1 tarzı K-dağılımlı) üzerinde ilk ilkelerden Range-Doppler odaklamasını çalıştırın:
 ```bash
 python run_rda.py --input real --source sentinel1
 ```
-Or run on **synthetic point scatterers**:
+Veya **sentetik nokta saçıcılar** üzerinde çalıştırın:
 ```bash
 python run_rda.py --input synthetic --output-dir ./output_rda --snr 25.0
 ```
-- **Generated Focus Metrics** in `output_rda/metrics.json`:
-  - Range 3dB Resolution: $2.50\text{ m}$ (Synthetic: $3.75\text{ m}$)
-  - Azimuth 3dB Resolution: $1.35\text{ m}$ (Synthetic: $1.05\text{ m}$)
-  - Shannon Image Entropy: $12.05\text{ nats}$ (Synthetic: $5.35\text{ nats}$)
-  - Image Contrast ($\sigma/\mu$): $1.01$ (Synthetic: $64.41$)
-  - Total RDA processing time: $0.034\text{ s}$ ($7.76\text{ Mpoints/s}$)
+- `output_rda/metrics.json` içinde **Üretilen Odak Metrikleri**:
+  - Menzil (Range) 3dB Çözünürlüğü: $2.50\text{ m}$ (Sentetik: $3.75\text{ m}$)
+  - Azimut (Azimuth) 3dB Çözünürlüğü: $1.35\text{ m}$ (Sentetik: $1.05\text{ m}$)
+  - Shannon Görüntü Entropisi: $12.05\text{ nats}$ (Sentetik: $5.35\text{ nats}$)
+  - Görüntü Kontrastı ($\sigma/\mu$): $1.01$ (Sentetik: $64.41$)
+  - Toplam RDA işleme süresi: $0.034\text{ s}$ ($7.76\text{ Mpoints/s}$)
 
 ---
 
-### Step 2: Real MSTAR Automatic Target Recognition & Explainable AI (Module 2)
-Train the lightweight Ghost-ECANet model on real Sandia MSTAR data:
+### Adım 2: Gerçek MSTAR Otomatik Hedef Tanıma ve Açıklanabilir YZ (Modül 2)
+Hafif Ghost-ECANet modelini gerçek Sandia MSTAR verisi üzerinde eğitin:
 ```bash
 python train.py --dataset mstar --epochs 30
 ```
-Run comprehensive evaluation (5-fold CV, class breakdown, ROC/PR curves, ECE calibration, OOD rejection, and robustness sweeps):
+Kapsamlı değerlendirmeyi çalıştırın (5-katlı çapraz doğrulama, sınıf dökümü, ROC/PR eğrileri, ECE kalibrasyonu, OOD reddi ve dayanıklılık taramaları):
 ```bash
 python scripts/evaluate_mstar_comprehensive.py
 ```
-- **Real MSTAR Results Summary**:
-  - Test Accuracy (17° $\to$ 15° SOC): **63.71%** (Macro F1: **60.86%**)
-  - 5-Fold Stratified Cross-Validation: **65.60% ± 5.64%** (Macro F1: **61.81% ± 7.09%**)
-  - T-72 Tank Performance: Recall **97.45%**, F1 **83.77%**, ROC-AUC **0.937**
-  - Expected Calibration Error (ECE): **0.0953** (< 10%)
-  - Out-of-Distribution (OOD) Softmax AUROC: **0.4607** (Demonstrating closed-set limitations)
-  - Diagnostic Plots generated in `eval_results/`:
+- **Gerçek MSTAR Sonuç Özeti**:
+  - Test Doğruluğu (17° $\to$ 15° SOC): **%63.71** (Makro F1: **%60.86**)
+  - 5-Katlı Tabakalı Çapraz Doğrulama: **%65.60 ± %5.64** (Makro F1: **%61.81 ± %7.09**)
+  - T-72 Tank Performansı: Duyarlılık (Recall) **%97.45**, F1 **%83.77**, ROC-AUC **0.937**
+  - Beklenen Kalibrasyon Hatası (ECE): **0.0953** (< %10)
+  - Dağılım Dışı (OOD) Softmax AUROC: **0.4607** (Kapalı küme kısıtlamalarını gösterir)
+  - `eval_results/` içinde üretilen tanı grafikleri:
     `confusion_matrix_mstar.png`, `roc_curves.png`, `pr_curves.png`, `calibration_curve.png`, `robustness_snr.png`, `robustness_occlusion.png`, `ood_rejection.png`, `gradcam_correct_samples.png`, `gradcam_failure_analysis.png`.
 
 ---
 
-### Step 3: Embedded Preprocessing & Hardware-in-the-Loop Port (Module 3)
-Execute host C unit tests and MISRA-C static analysis:
+### Adım 3: Gömülü Ön İşleme ve Donanım Döngüsünde (HIL) Port (Modül 3)
+Ana makine (host) C birim testlerini ve MISRA-C statik analizini çalıştırın:
 ```bash
-# Run Unity test suite (13/13 passing) and cppcheck (0 defects)
+# Unity test paketini (13/13 geçiyor) ve cppcheck analizini (0 hata) çalıştırın
 mingw32-make test
 mingw32-make check
 ```
 
-Execute target microcontroller WCET benchmark (simulating ARM Cortex-M4F @ 168 MHz):
+Hedef mikrodenetleyici WCET testini çalıştırın (ARM Cortex-M4F @ 168 MHz benzetimi):
 ```bash
 cd modules/module3_embedded/stm32_port
 gcc -Wall -Wextra -pedantic -std=c99 -I ../include src/benchmark_wcet.c ../src/fft_mock.c ../src/cfar_detector.c -o benchmark_wcet.exe -lm
 ./benchmark_wcet.exe
 ```
-- **Target Verification Output**:
-  - Max Error vs Golden DFT: $1.66 \times 10^{-4} < 10^{-3}$ (**PASSED**)
-  - Host Execution Timing: $\approx 8.0\ \mu\text{s}$ per iteration (512-pt FFT + CA-CFAR host-measured)
-  - Theoretical Cortex-M4 Projection: $\approx 64,000$ cycles = **~0.38 ms** $\ll 25.0\text{ ms}$ mission frame deadline (theoretical projection; host-timed, not measured on target hardware)
-  - Dynamic heap allocation: **0 Bytes** (**MISRA-C Rule 21.3 PASSED**)
+- **Hedef Doğrulama Çıktısı**:
+  - Referans (Golden) DFT'ye Göre Maksimum Hata: $1.66 \times 10^{-4} < 10^{-3}$ (**GEÇTİ**)
+  - Ana Makine Çalışma Zamanı: İterasyon başına $\approx 8.0\ \mu\text{s}$ (ana makinede ölçülen 512-nokta FFT + CA-CFAR)
+  - Teorik Cortex-M4 İzdüşümü: $\approx 64.000$ çevrim = **~0.38 ms** $\ll 25.0\text{ ms}$ görev çerçevesi sınırı (teorik izdüşüm; ana makinede süre ölçülmüş, hedef donanımda ölçülmemiştir)
+  - Dinamik yığın (heap) tahsisi: **0 Bayt** (**MISRA-C Kural 21.3 GEÇTİ**)
 
 ---
 
-### Step 4: Full Automated Test Pyramid Execution
-Run all 23 Python tests across the test pyramid:
+### Adım 4: Tam Otomatik Test Piramidinin Çalıştırılması
+Test piramidi kapsamındaki tüm 23 Python testini çalıştırın:
 ```bash
 pytest tests/ -v
 ```
@@ -271,64 +271,64 @@ tests/test_regression.py::test_mstar_loader_integrity_regression PASSED  [100%]
 ============================= 23 passed in 23.28s =============================
 ```
 
-To run everything in a single reproducible command:
+Tüm süreci tek bir tekrarlanabilir komutla çalıştırmak için:
 ```bash
 mingw32-make reproduce-all
 ```
 
 ---
 
-## 4. Acceptance Criteria Verification Matrix
+## 4. Kabul Kriterleri Doğrulama Matrisi
 
-| Requirement | Acceptance Criteria | Verified Artifact / Command | Status |
+| Gereksinim | Kabul Kriteri | Doğrulanan Çıktı / Komut | Durum |
 |---|---|---|---|
-| **R1. Raw Signal (RDA)** | `python run_rda.py` supports real and synthetic SAR, outputs focused 2D PNGs and objective metrics | `output_rda/` (4 diagnostic plots + `metrics.json` with Entropy/Contrast) | **VERIFIED** |
-| **R1. Raw Signal (RDA)** | Matched filtering and RCMC written from scratch with step-by-step mathematical explanations | `modules/module1_rda/rda_pipeline.py` & `modules/module1_rda/README.md` | **VERIFIED** |
-| **R1. Raw Signal (RDA)** | Automated pytest unit tests pass all signal invariants | `tests/test_rda.py` (8/8 tests passing) | **VERIFIED** |
-| **R2. ATR & XAI** | Model parameter count verified programmatically under 2,000,000 parameters | `count_parameters()` = **904,268** parameters | **VERIFIED** |
-| **R2. ATR & XAI** | Model evaluated on real Sandia MSTAR benchmark with 5-fold CV and class metrics | [`docs/RESULTS.md`](docs/RESULTS.md) (63.71% test acc, 65.60% CV, T-72 recall 97.45%) | **VERIFIED** |
-| **R2. ATR & XAI** | Out-of-Distribution (OOD) test with 1,838 unknown military targets | `eval_results/ood_energy_comparison.png` & Energy AUROC 0.6500 reported honestly | **VERIFIED** |
-| **R2. ATR & XAI** | Grad-CAM XAI generated from scratch for correct and failure cases | `gradcam_correct_samples.png` & `gradcam_failure_analysis.png` | **VERIFIED** |
-| **R3. Embedded Preproc** | C code compiles with `gcc -Wall -Wextra -pedantic` with zero warnings | `modules/module3_embedded/test_runner.exe` built with zero warnings | **VERIFIED** |
-| **R3. Embedded Preproc** | Automated test suite runs Unity tests and passes 100% of test cases | `test_runner.exe` (13/13 Unity tests passing, 0 failures) | **VERIFIED** |
-| **R3. Embedded Preproc** | Static analysis conforms to MISRA-C:2012 guidelines | `mingw32-make check` (Cppcheck exit code 0, 0 defects) | **VERIFIED** |
-| **R3. Embedded Preproc** | Target STM32 port with host timing and theoretical Cortex-M4 WCET projection < 25 ms | `stm32_port/` (~0.38 ms estimated WCET; Cortex-M4F @ 168 MHz theoretical projection; host-timed, not measured on target hardware) | **VERIFIED** |
-| **R4. Systems Integration**| Requirements Traceability Matrix verifies 100% bidirectional traceability | `docs/RTM.md` (Version 2.3.0 mapping all 23 Pytest + 13 Unity tests) | **VERIFIED** |
-| **R4. Systems Integration**| Full test pyramid covering Unit, Integration, Property, Regression | `tests/` (23 automated tests passing) | **VERIFIED** |
-| **R4. Systems Integration**| CI/CD pipeline automated via GitHub Actions | `.github/workflows/ci.yml` (multi-step workflow) | **VERIFIED** |
-| **R4. Systems Integration**| Scope statement & limitations clearly stated without certified overclaiming | `SCOPE.md` & `docs/LIMITATIONS.md` | **VERIFIED** |
+| **R1. Ham Sinyal (RDA)** | `python run_rda.py` gerçek ve sentetik SAR'ı destekler, odaklanmış 2B PNG'ler ve nesnel metrikler üretir | `output_rda/` (4 tanı grafiği + Entropi/Kontrast içeren `metrics.json`) | **DOĞRULANDI** |
+| **R1. Ham Sinyal (RDA)** | Eşlenik filtreleme ve RCMC, adım adım matematiksel açıklamalarla sıfırdan yazılmıştır | `modules/module1_rda/rda_pipeline.py` & `modules/module1_rda/README.md` | **DOĞRULANDI** |
+| **R1. Ham Sinyal (RDA)** | Otomatik pytest birim testleri tüm sinyal değişmezlerini doğrular | `tests/test_rda.py` (8/8 test geçiyor) | **DOĞRULANDI** |
+| **R2. ATR ve XAI** | Model parametre sayısı programatik olarak 2.000.000 parametrenin altında doğrulanmıştır | `count_parameters()` = **904.268** parametre | **DOĞRULANDI** |
+| **R2. ATR ve XAI** | Model gerçek Sandia MSTAR kıyaslaması üzerinde 5-katlı CV ve sınıf metrikleriyle değerlendirilmiştir | [`docs/RESULTS.md`](docs/RESULTS.md) (%63.71 test doğruluğu, %65.60 CV, T-72 duyarlılığı %97.45) | **DOĞRULANDI** |
+| **R2. ATR ve XAI** | 1.838 bilinmeyen askeri hedef ile Dağılım Dışı (OOD) testi | `eval_results/ood_energy_comparison.png` & Enerji AUROC 0.6500 dürüstçe raporlandı | **DOĞRULANDI** |
+| **R2. ATR ve XAI** | Sıfırdan üretilen Grad-CAM XAI (doğru ve hatalı sınıflandırma durumları için) | `gradcam_correct_samples.png` & `gradcam_failure_analysis.png` | **DOĞRULANDI** |
+| **R3. Gömülü Ön İşleme** | C kodu `gcc -Wall -Wextra -pedantic` ile sıfır uyarıyla derlenir | `modules/module3_embedded/test_runner.exe` sıfır uyarıyla derlendi | **DOĞRULANDI** |
+| **R3. Gömülü Ön İşleme** | Otomatik test paketi Unity testlerini çalıştırır ve test senaryolarının %100'ü geçer | `test_runner.exe` (13/13 Unity testi geçiyor, 0 hata) | **DOĞRULANDI** |
+| **R3. Gömülü Ön İşleme** | Statik analiz MISRA-C:2012 kurallarına uygundur | `mingw32-make check` (Cppcheck çıkış kodu 0, 0 kusur) | **DOĞRULANDI** |
+| **R3. Gömülü Ön İşleme** | Ana makine zamanlaması ve teorik Cortex-M4 WCET kestirimi < 25 ms olan hedef STM32 portu | `stm32_port/` (~0.38 ms tahmini WCET; Cortex-M4F @ 168 MHz teorik izdüşümü; host ölçümlü) | **DOĞRULANDI** |
+| **R4. Sistem Entegrasyonu** | Gereksinim İzlenebilirlik Matrisi %100 çift yönlü izlenebilirliği doğrular | `docs/RTM.md` (Tüm 23 Pytest + 13 Unity testini eşleyen Sürüm 2.3.0) | **DOĞRULANDI** |
+| **R4. Sistem Entegrasyonu** | Birim, Entegrasyon, Özellik ve Regresyonu kapsayan tam test piramidi | `tests/` (23 otomatik test geçiyor) | **DOĞRULANDI** |
+| **R4. Sistem Entegrasyonu** | GitHub Actions ile otomatikleştirilmiş CI/CD hattı | `.github/workflows/ci.yml` (çok adımlı iş akışı) | **DOĞRULANDI** |
+| **R4. Sistem Entegrasyonu** | Kapsam beyanı ve kısıtlamalar sertifikasyon abartısı yapılmadan açıkça belirtilmiştir | `SCOPE.md` & `docs/LIMITATIONS.md` | **DOĞRULANDI** |
 
 ---
 
-## 5. Independent Technical Audit & Resolution Matrix
+## 5. Bağımsız Teknik Denetim ve Çözüm Matrisi
 
-All identified audit findings from previous engineering reviews were resolved with zero regression:
+Önceki mühendislik incelemelerinde belirlenen tüm denetim bulguları sıfır regresyon ile çözülmüştür:
 
-| # | Audit Finding Category | Severity | Engineering Root Cause & Applied Solution | Verified System State |
+| # | Denetim Bulgusu Kategorisi | Kritiklik Derecesi | Mühendislik Kök Nedeni ve Uygulanan Çözüm | Doğrulanmış Sistem Durumu |
 |:---:|---|:---:|---|---|
-| **1** | ATR Class Collapse | Critical | BTR-70 had 0% F1 due to small batch/epoch and aggressive regularization. Increased training epochs to 30, generated 200 samples/class, lowered label smoothing to $\epsilon=0.05$, adjusted weight decay to $5\times 10^{-4}$. | **Macro F1: 100.00%** (Synthetic toy benchmark). |
-| **2** | Real-World Validation Gap | High | ATR was previously validated only on synthetic point scatterers. Integrated Sandia MSTAR benchmark (1,285 chips + 1,838 OOD chips). | Real MSTAR test accuracy **63.71%**, 5-fold CV **65.60% ± 5.64%** reported honestly. |
-| **3** | Uncalibrated Avionics Claims | High | Previous claims implied official DO-178C / MIL-STD flight certification. Added `SCOPE.md` and `LIMITATIONS.md` clarifying architectural inspiration. | 100% honest engineering scope established. |
-| **4** | Target Microcontroller WCET Gap | Medium | Previous timing was uncalibrated. Ported Module 3 to STM32 target firmware, host-timed at ~8 us, with ~0.38 ms Cortex-M4 theoretical projection clearly labeled. | **~0.38 ms estimated WCET** (theoretical projection) documented. |
-| **5** | Lack of Integration & Property Tests | Medium | System only had basic unit tests. Implemented test pyramid: end-to-end integration, Parseval energy conservation, CFAR scale invariance, and parameter regressions. | **23 / 23 Pytest tests passing**. |
-| **6** | Closed-Set Softmax Vulnerability | Medium | Closed-set classifier cannot detect unknown vehicles. Tested with 1,838 OOD targets: Softmax AUROC 0.4607, Free Energy AUROC improved to 0.6500 (+18.9%) with statistical thresholding ($\tau_{95}$). | Quantified and documented in `docs/RESULTS.md`. |
-| **7** | Real SAR Image Focus Metrics | Low | Module 1 lacked objective focus criteria on continuous scenes. Integrated Shannon Entropy, Contrast ($\sigma/\mu$), and PAPR. | Focus metrics computed and saved to `metrics.json`. |
+| **1** | ATR Sınıf Çöküşü (Class Collapse) | Kritik | BTR-70, küçük parti/epoch boyutu ve aşırı regülarizasyon nedeniyle %0 F1 skoruna sahipti. Eğitim epoch sayısı 30'a çıkarıldı, sınıf başına 200 örnek üretildi, etiket yumuşatma (label smoothing) $\epsilon=0.05$'e düşürüldü ve ağırlık sönümü (weight decay) $5\times 10^{-4}$ olarak ayarlandı. | **Makro F1: %100.00** (Sentetik oyuncak kıyaslama). |
+| **2** | Gerçek Dünya Doğrulama Boşluğu | Yüksek | ATR daha önce yalnızca sentetik nokta saçıcılar üzerinde doğrulanmıştı. Sandia MSTAR kıyaslama veri seti entegre edildi (1.285 çip + 1.838 OOD çipi). | Gerçek MSTAR test doğruluğu **%63.71**, 5-katlı CV **%65.60 ± %5.64** dürüstçe raporlandı. |
+| **3** | Kalibre Edilmemiş Aviyonik İddiaları | Yüksek | Önceki ifadeler resmi DO-178C / MIL-STD uçuş sertifikasyonunu ima ediyordu. Mimari esinlenmeyi netleştiren `SCOPE.md` ve `LIMITATIONS.md` belgeleri eklendi. | %100 dürüst mühendislik kapsamı belirlendi. |
+| **4** | Hedef Mikrodenetleyici WCET Boşluğu | Orta | Önceki zamanlama kalibre edilmemişti. Modül 3, STM32 hedef bellenimine uyarlandı, ana makinede ~8 us olarak ölçüldü ve ~0.38 ms Cortex-M4 teorik izdüşümü açıkça etiketlendi. | **~0.38 ms tahmini WCET** (teorik izdüşüm) belgelendi. |
+| **5** | Entegrasyon ve Özellik Testlerinin Eksikliği | Orta | Sistem yalnızca temel birim testlerine sahipti. Test piramidi uygulandı: uçtan uca entegrasyon, Parseval enerji korunumu, CFAR ölçek değişmezliği ve parametre regresyonları. | **23 / 23 Pytest testi geçiyor**. |
+| **6** | Kapalı Küme Softmax Güvenlik Açığı | Orta | Kapalı küme sınıflandırıcı bilinmeyen araçları tespit edemez. 1.838 OOD hedefiyle test edildi: Softmax AUROC 0.4607 iken Serbest Enerji (Free Energy) AUROC değeri istatistiksel eşikleme ($\tau_{95}$) ile 0.6500'e (+%18.9) yükseltildi. | Ölçüldü ve `docs/RESULTS.md` dosyasında belgelendi. |
+| **7** | Gerçek SAR Görüntüsü Odak Metrikleri | Düşük | Modül 1, sürekli sahneler üzerinde nesnel odaklama kriterlerinden yoksundu. Shannon Entropisi, Kontrast ($\sigma/\mu$) ve PAPR metrikleri entegre edildi. | Odak metrikleri hesaplandı ve `metrics.json` dosyasına kaydedildi. |
 
 ---
 
-## 6. Scientific Publications & Deliverables
+## 6. Bilimsel Yayınlar ve Proje Çıktıları
 
-Comprehensive engineering reports and scientific manuscripts prepared for technical review and defense portfolio presentation:
+Teknik inceleme ve savunma sanayii portföy sunumu için hazırlanan kapsamlı mühendislik raporları ve bilimsel makaleler:
 
-1. **Academic LaTeX Scientific Report v2 (PDF)**:
-   - File: [`reports/EdgeSAR_Scientific_Report_v2.pdf`](reports/EdgeSAR_Scientific_Report_v2.pdf)
-   - Format: 13 pages, IEEE/AIAA style, LaTeX compiled with MiKTeX (0 warnings, 0 overfull hboxes).
-   - Contents: Full theoretical physics derivations (LFM, POSP, RCMC kernel, CA-CFAR, Radix-2 FFT, Ghost-ECANet, ECA 1D conv, Grad-CAM XAI), 7 high-resolution diagnostic figures, empirical MSTAR evaluation (63.71% test acc, 65.60% CV), class weighting trade-off analysis, Free Energy OOD detection (AUROC 0.6500), and verification matrices.
-2. **LaTeX Manuscript Source**:
-   - File: [`reports/EdgeSAR_Scientific_Report_v2.tex`](reports/EdgeSAR_Scientific_Report_v2.tex)
-3. **Experimental Results & Benchmark Report**:
-   - File: [`docs/RESULTS.md`](docs/RESULTS.md)
-   - Format: Complete empirical evaluation of real Sandia MSTAR data, 5-fold cross-validation, class breakdown, OOD analysis, robustness sweeps, and STM32 embedded benchmarks.
-4. **Engineering Scope & Technical Limitations**:
-   - Files: [`SCOPE.md`](SCOPE.md) & [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)
-   - Format: Formal boundary definition, non-goals, radar domain gap, and honest aerospace engineering disclosures.
+1. **Akademik LaTeX Bilimsel Raporu v2 (PDF)**:
+   - Dosya: [`reports/EdgeSAR_Scientific_Report_v2.pdf`](reports/EdgeSAR_Scientific_Report_v2.pdf)
+   - Format: 13 sayfa, IEEE/AIAA stili, MiKTeX ile derlenmiş LaTeX (0 uyarı, 0 taşan kutu / overfull hbox).
+   - İçerik: Eksiksiz teorik fizik çıkarımları (LFM, POSP, RCMC çekirdeği, CA-CFAR, Radix-2 FFT, Ghost-ECANet, ECA 1B evrişim, Grad-CAM XAI), 7 yüksek çözünürlüklü tanı grafiği, ampirik MSTAR değerlendirmesi (%63.71 test doğruluğu, %65.60 CV), sınıf ağırlıklandırma ödünleşim analizi, Serbest Enerji OOD tespiti (AUROC 0.6500) ve doğrulama matrisleri.
+2. **LaTeX Makale Kaynak Kodu**:
+   - Dosya: [`reports/EdgeSAR_Scientific_Report_v2.tex`](reports/EdgeSAR_Scientific_Report_v2.tex)
+3. **Deneysel Sonuçlar ve Kıyaslama Raporu**:
+   - Dosya: [`docs/RESULTS.md`](docs/RESULTS.md)
+   - Format: Gerçek Sandia MSTAR verilerinin eksiksiz ampirik değerlendirmesi, 5-katlı çapraz doğrulama, sınıf dökümü, OOD analizi, dayanıklılık taramaları ve STM32 gömülü kıyaslamaları.
+4. **Mühendislik Kapsamı ve Teknik Kısıtlamalar**:
+   - Dosyalar: [`SCOPE.md`](SCOPE.md) & [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)
+   - Format: Resmi sınır tanımları, kapsam dışı hedefler, radar alan farkı (domain gap) ve dürüst havacılık mühendisliği açıklamaları.
