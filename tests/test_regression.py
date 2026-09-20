@@ -38,7 +38,12 @@ def test_parameter_budget_regression():
 def test_embedded_c_zero_heap_memory_safety():
     """Verify that embedded C sources contain zero dynamic allocation calls."""
     c_src_dir = ROOT_DIR / "modules" / "module3_embedded" / "src"
-    c_files = list(c_src_dir.glob("*.c")) + list((ROOT_DIR / "modules" / "module3_embedded" / "include").glob("*.h"))
+    c_files = (
+        list(c_src_dir.glob("*.c"))
+        + list((ROOT_DIR / "modules" / "module3_embedded" / "include").glob("*.h"))
+        + list((ROOT_DIR / "modules" / "module3_embedded" / "stm32_port").rglob("*.c"))
+        + list((ROOT_DIR / "modules" / "module3_embedded" / "stm32_port").rglob("*.h"))
+    )
 
     forbidden_tokens = ["malloc(", "calloc(", "free(", "realloc(", "alloca("]
     for c_file in c_files:

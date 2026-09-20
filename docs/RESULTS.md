@@ -35,6 +35,14 @@ Aşağıdaki tablo, sentetik saçıcı benzetimi ile gerçek Sandia MSTAR verisi
 | **Parametre Sayısı**          | 904,268 (< 2M sınırında) | 904,268 (< 2M sınırında) | 904,268 (< 2M sınırında) |
 | **MFLOPs / Çıkarım Süresi**  | ~30.2 MFLOPs / 16.33 ms | ~30.2 MFLOPs / 16.33 ms | ~30.2 MFLOPs / 16.33 ms |
 
+> **Not (Tekrarlanabilirlik ve Checkpoint Kararlılığı):** Yukarıdaki %63.71 doğruluk, repoda commit'li `best_mstar_model.pth` checkpoint'ine aittir ve `python scripts/evaluate_mstar_comprehensive.py` ile birebir yeniden üretilebilir. `--retrain` bayrağıyla sıfırdan yapılan eğitim, küçük veri seti (698 örnek) nedeniyle seed'e bağlı farklı (bu denemede daha iyi: %82.96) sonuçlar verebilir. Karşılaştırılabilirlik için raporda sunulan tüm ana metrikler sabit checkpoint'e dayanır.
+
+### Checkpoint Kararlılığı Notu
+| Kaynak | Doğruluk | Not |
+|---|---|---|
+| Commit'li checkpoint (`best_mstar_model.pth`) | %63.71 | Raporlanan ana sonuç, tekrarlanabilir |
+| `--retrain` (taze eğitim, aynı hiperparametreler) | %82.96 | Farklı random seed; varyansı gösterir, ana sonuç değildir |
+
 > [!IMPORTANT]
 > **Neden Sentetik Veride %100, Gerçek Veride %63.71?**  
 > Sentetik simülatör, hedefleri belirli koordinatlardaki gürültüsüz nokta saçıcılar olarak üretir. Gerçek MSTAR radar çiplerinde ise:

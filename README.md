@@ -54,6 +54,12 @@
 | **Embedded Unit Tests (Unity)** | 100% Coverage | **13 / 13 Passing (0 Failures)**| Bare-Metal C Harness | **PASSED** |
 | **Static Code Analysis** | MISRA-C Compliant | **0 Defects / 0 Warnings** | Cppcheck `--enable=all` | **PASSED** |
 
+> **Not (tekrarlanabilirlik):** Yukarıdaki %63.71 doğruluk, repoda commit'li `best_mstar_model.pth`
+> checkpoint'ine aittir ve `python scripts/evaluate_mstar_comprehensive.py` ile birebir yeniden üretilebilir.
+> `--retrain` bayrağıyla sıfırdan yapılan eğitim, küçük veri seti (698 örnek) nedeniyle seed'e bağlı farklı
+> (bu denemede daha iyi: %82.96) sonuçlar verebilir. Karşılaştırılabilirlik için raporlanan tüm metrikler
+> sabit checkpoint'e dayanır; `--retrain` sonuçları ayrıca `docs/RESULTS.md`'de not düşülmüştür.
+
 > [!NOTE]
 > Detailed numerical breakdowns, confusion matrices, ROC/PR curves, OOD analyses, and robustness sweeps are fully documented in [`docs/RESULTS.md`](docs/RESULTS.md).
 
